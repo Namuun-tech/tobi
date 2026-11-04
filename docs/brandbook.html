@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тоби брэндбук</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 1120px column of numbered brandbook chapters; brand constants shown as swatches, UI tokens follow the theme. */
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --surface-2:#ECEFF3; --line:#DCE0E7;
+  --ink:#18202E; --ink-2:#4A5568; --ink-3:#7A8496;
+  --honey:#F4A62A; --honey-soft:#FDEFD6; --on-honey:#241600;
+  --sky:#2F6FDB; --sky-soft:#E3ECFB; --pine:#2E8B62; --pine-soft:#DDF1E7;
+  --danger:#C93C3C; --danger-soft:#FBE3E3;
+  --f-display:"Unbounded","Onest",system-ui,sans-serif;
+  --f-body:"Onest",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r-s:8px; --r-m:14px; --r-l:22px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10141C; --surface:#171C26; --surface-2:#1F2531; --line:#2B3241;
+  --ink:#EEF1F6; --ink-2:#AEB7C6; --ink-3:#7E889A;
+  --honey:#F6B445; --honey-soft:#3A2D16; --on-honey:#241600;
+  --sky:#6E9DF0; --sky-soft:#1C2A45; --pine:#4FB585; --pine-soft:#173327;
+  --danger:#F07171; --danger-soft:#3D1D1F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10141C; --surface:#171C26; --surface-2:#1F2531; --line:#2B3241;
+  --ink:#EEF1F6; --ink-2:#AEB7C6; --ink-3:#7E889A;
+  --honey:#F6B445; --honey-soft:#3A2D16; --on-honey:#241600;
+  --sky:#6E9DF0; --sky-soft:#1C2A45; --pine:#4FB585; --pine-soft:#173327;
+  --danger:#F07171; --danger-soft:#3D1D1F; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:var(--sky)}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h2{font-size:clamp(24px,3.2vw,32px);line-height:1.2}
+h3{font-size:17px;line-height:1.35}
+p{margin:0}
+.lead{font-size:18px;color:var(--ink-2);max-width:62ch}
+.muted{color:var(--ink-2)}
+.mono{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;color:var(--ink-3)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.nav .brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:17px;text-decoration:none;color:var(--ink);flex-shrink:0}
+.nav .brand svg{width:26px;height:26px}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav ul::-webkit-scrollbar{display:none}
+.nav li a{display:block;white-space:nowrap;padding:6px 10px;border-radius:var(--r-s);font-size:14px;color:var(--ink-2);text-decoration:none}
+.nav li a:hover{background:var(--surface-2);color:var(--ink)}
+
+/* hero */
+.hero{padding-block:56px 48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero>*{min-width:0}
+.hero .wm{display:flex;align-items:center;gap:.04em;font-family:var(--f-display);font-weight:700;font-size:clamp(72px,12vw,132px);line-height:1;letter-spacing:-.03em;color:var(--ink)}
+.hero .wm svg{width:.86em;height:.86em;margin:0 .02em;transform:translateY(.04em)}
+.hero .tag{font-family:var(--f-display);font-size:clamp(20px,2.4vw,26px);margin-top:20px}
+.hero .lead{margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.pill{font-family:var(--f-mono);font-size:12px;padding:5px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.toono-card{background:var(--honey);border-radius:var(--r-l);aspect-ratio:1/1;max-width:100%;display:grid;place-items:center;position:relative;overflow:hidden}
+.toono-card svg{width:62%;height:62%;--mk-bg:#18202E;--mk-fg:#F4A62A}
+.toono-card .cap{position:absolute;left:20px;bottom:16px;right:20px;font-family:var(--f-mono);font-size:12px;color:#241600;display:flex;justify-content:space-between;gap:8px}
+
+/* sections */
+section.ch{padding-block:56px;border-top:1px solid var(--line)}
+.ch-head{display:grid;grid-template-columns:120px 1fr;gap:16px 24px;margin-bottom:32px}
+.ch-head .num{font-family:var(--f-mono);font-size:13px;color:var(--honey);padding-top:8px}
+.ch-head .lead{margin-top:10px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:22px;min-width:0}
+.box h3{margin-bottom:8px}
+.box p{color:var(--ink-2);font-size:15px}
+ul.clean{margin:10px 0 0;padding-left:18px;color:var(--ink-2);font-size:15px}
+ul.clean li{margin:4px 0}
+.k{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:8px}
+.quote{font-family:var(--f-display);font-size:clamp(20px,2.4vw,26px);line-height:1.4;max-width:30ch}
+
+/* values */
+.val{display:flex;flex-direction:column;gap:8px}
+.val .dot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:15px;font-weight:700}
+
+/* logo */
+.logo-panel{border-radius:var(--r-m);padding:32px 24px;min-height:220px;display:grid;place-items:center;position:relative;border:1px solid var(--line)}
+.logo-panel .lbl{position:absolute;left:16px;bottom:12px;font-family:var(--f-mono);font-size:11.5px}
+.wmk{display:flex;align-items:center;font-family:var(--f-display);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.03em;color:var(--wm)}
+.wmk svg{width:.86em;height:.86em;margin:0 .02em;transform:translateY(.04em)}
+.lp-light{background:#FFFFFF;--wm:#18202E;--mk-bg:#F4A62A;--mk-fg:#18202E}
+.lp-light .lbl{color:#7A8496}
+.lp-dark{background:#18202E;--wm:#FFFFFF;--mk-bg:#F4A62A;--mk-fg:#18202E;border-color:#18202E}
+.lp-dark .lbl{color:#AEB7C6}
+.lp-honey{background:#F4A62A;--wm:#18202E;--mk-bg:#18202E;--mk-fg:#F4A62A;border-color:#F4A62A}
+.lp-honey .lbl{color:#4A3200}
+.anatomy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px;align-items:center}
+.anatomy svg.big{width:100%;max-width:320px;height:auto;display:block;margin:0 auto;--mk-bg:#F4A62A;--mk-fg:#18202E}
+.anatomy ol{margin:0;padding-left:20px;color:var(--ink-2)}
+.anatomy ol li{margin:8px 0}
+.anatomy ol b{color:var(--ink);font-weight:600}
+.clear{position:relative;border:1.5px dashed var(--ink-3);border-radius:var(--r-s);padding:28px;display:inline-flex}
+.clear .x{position:absolute;font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.dont{border-radius:var(--r-m);background:#FFFFFF;border:1px solid var(--line);min-height:150px;display:grid;place-items:center;position:relative;overflow:hidden;padding:20px 12px 40px}
+.dont .wmk{font-size:40px}
+.dont .no{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;font-size:13px;background:var(--danger-soft);color:var(--danger);font-weight:500}
+
+/* colors */
+.sw{border-radius:var(--r-m);overflow:hidden;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.sw .chip{height:132px;padding:14px;display:flex;flex-direction:column;justify-content:space-between}
+.sw .chip b{font-family:var(--f-display);font-weight:500;font-size:17px}
+.sw .chip .mono{color:inherit;opacity:.8}
+.sw .info{padding:14px;display:grid;gap:4px;font-size:14px}
+.sw .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.copy{font:500 12px var(--f-mono);border:1px solid var(--line);background:var(--surface-2);color:var(--ink);padding:4px 8px;border-radius:6px;cursor:pointer}
+.copy:hover{border-color:var(--ink-3)}
+.ratio{display:flex;height:44px;border-radius:var(--r-s);overflow:hidden;margin-top:12px;border:1px solid var(--line)}
+.ratio div{display:grid;place-items:center;font-family:var(--f-mono);font-size:12px}
+.members{display:flex;flex-wrap:wrap;gap:10px}
+.mem{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-size:14px}
+.mem .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px}
+.mem small{display:block;font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+
+/* type */
+.spec{display:grid;gap:0;border-top:1px solid var(--line)}
+.spec .r{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.spec .r>div{min-width:0;overflow-wrap:anywhere}
+.alpha{font-family:var(--f-display);font-size:clamp(28px,4vw,40px);line-height:1.3;letter-spacing:.01em;overflow-wrap:anywhere}
+
+/* icons */
+.icons{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.ic{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.ic span.g{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--honey-soft);color:var(--ink)}
+.ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+/* voice */
+.say{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
+.say div{border-radius:var(--r-s);padding:12px 14px;font-size:15px}
+.say .yes{background:var(--pine-soft)}
+.say .no{background:var(--danger-soft)}
+.say b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;margin-bottom:4px;font-weight:500}
+.say .yes b{color:var(--pine)}
+.say .no b{color:var(--danger)}
+
+/* components */
+.btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:600 15px var(--f-body);border-radius:12px;padding:12px 18px;border:0;cursor:pointer;min-height:46px}
+.btn-p{background:var(--honey);color:var(--on-honey)}
+.btn-p:hover{filter:brightness(1.05)}
+.btn-s{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-g{background:transparent;color:var(--sky);padding-inline:8px}
+.btn-q{background:var(--sky);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.budget .bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:12px 0 8px}
+.budget .bar i{display:block;height:100%;width:65%;background:var(--pine);border-radius:99px}
+.budget .big{font-family:var(--f-display);font-size:26px;font-variant-numeric:tabular-nums}
+.tnum{font-variant-numeric:tabular-nums}
+.toast{display:flex;gap:12px;align-items:flex-start;background:var(--ink);color:var(--bg);border-radius:var(--r-m);padding:14px 16px;font-size:14.5px}
+.toast svg{flex-shrink:0;width:22px;height:22px;--mk-bg:#F4A62A;--mk-fg:#18202E}
+.price{border:2px solid var(--honey);border-radius:var(--r-l);padding:24px;background:var(--surface)}
+.price .amt{font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;margin:10px 0 4px}
+.price .amt small{font-family:var(--f-body);font-weight:500;font-size:16px;color:var(--ink-2)}
+.badge{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--f-mono);padding:4px 10px;border-radius:99px;background:var(--sky-soft);color:var(--sky)}
+.badge.h{background:var(--honey-soft);color:var(--ink)}
+
+/* phone */
+.apps{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:32px;align-items:start}
+.phone{width:100%;max-width:320px;border-radius:38px;border:8px solid var(--ink);background:var(--bg);overflow:hidden;margin:0 auto}
+.phone .scr{padding:18px 14px 20px;display:grid;gap:12px}
+.phone .top{display:flex;justify-content:space-between;align-items:center}
+.phone .hi{font-family:var(--f-display);font-size:17px;line-height:1.3}
+.phone .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:13.5px}
+.phone .card .k{margin-bottom:6px}
+.phone .item{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.phone .item:last-child{border-bottom:0}
+.phone .ai{background:var(--honey-soft);border:0}
+.phone .avs{display:flex}
+.phone .avs span{width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);margin-left:-6px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:600}
+.phone .tabs{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:var(--ink-3)}
+.phone .tabs span{display:flex;flex-direction:column;align-items:center;gap:3px}
+.phone .tabs .on{color:var(--ink);font-weight:600}
+.phone .tabs svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.appicons{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.appicon{background:#F4A62A;display:grid;place-items:center;--mk-bg:#18202E;--mk-fg:#F4A62A}
+.appicon svg{width:66%;height:66%}
+.post{aspect-ratio:1/1;max-width:100%;border-radius:var(--r-m);background:#18202E;color:#FFFFFF;padding:24px;display:flex;flex-direction:column;justify-content:space-between;--wm:#FFFFFF;--mk-bg:#F4A62A;--mk-fg:#18202E}
+.post .t{font-family:var(--f-display);font-size:clamp(20px,2.6vw,26px);line-height:1.25}
+.post .t em{font-style:normal;color:#F4A62A}
+.post .wmk{font-size:28px}
+
+/* hackathon */
+.check{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.check li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:14px 16px}
+.check li i{width:24px;height:24px;border-radius:50%;background:var(--honey);color:var(--on-honey);display:grid;place-items:center;font:600 12px var(--f-mono);font-style:normal}
+.check b{font-weight:600}
+.check p{color:var(--ink-2);font-size:15px;margin-top:2px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px var(--f-mono);letter-spacing:.04em;color:var(--ink-3);text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+footer{border-top:1px solid var(--line);padding-block:28px 48px;color:var(--ink-3);font-size:13px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .toono-card{max-width:420px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .icons{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .apps,.anatomy{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .ch-head{grid-template-columns:1fr;gap:4px}
+  .ch-head .num{padding-top:0}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .icons{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .say{grid-template-columns:1fr}
+  .spec .r{grid-template-columns:1fr;gap:6px}
+  .wmk{font-size:52px}
+  .nav .brand span{display:none}
+}
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 48 48">
+    <circle cx="24" cy="24" r="21" style="fill:var(--mk-bg,#F4A62A)"/>
+    <g style="fill:none;stroke:var(--mk-fg,#18202E);stroke-linecap:round">
+      <circle cx="24" cy="24" r="12.5" stroke-width="3.4"/>
+      <path d="M24 11.5v25M11.5 24h25" stroke-width="3.4"/>
+      <path d="M38.32 29.94L41.56 31.28M29.94 38.32L31.28 41.56M18.06 38.32L16.72 41.56M9.68 29.94L6.44 31.28M9.68 18.06L6.44 16.72M18.06 9.68L16.72 6.44M29.94 9.68L31.28 6.44M38.32 18.06L41.56 16.72" stroke-width="2.6"/>
+    </g>
+    <circle cx="24" cy="24" r="4.6" style="fill:var(--mk-bg,#F4A62A);stroke:var(--mk-fg,#18202E)" stroke-width="3.4"/>
+  </symbol>
+</svg>
+
+<nav class="nav" aria-label="Бүлгүүд">
+  <div class="wrap">
+    <a class="brand" href="#top" style="--mk-bg:#F4A62A;--mk-fg:#18202E"><svg aria-hidden="true"><use href="#mark"/></svg><span>tobi</span></a>
+    <ul>
+      <li><a href="#essence">Мөн чанар</a></li>
+      <li><a href="#logo">Лого</a></li>
+      <li><a href="#color">Өнгө</a></li>
+      <li><a href="#type">Фонт</a></li>
+      <li><a href="#icons">Икон</a></li>
+      <li><a href="#voice">Өнгө аяс</a></li>
+      <li><a href="#ui">UI</a></li>
+      <li><a href="#apply">Хэрэглээ</a></li>
+      <li><a href="#hackathon">Хакатон</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top">
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <span class="eyebrow">Брэндбук · хувилбар 1.0 · 2026.11.04</span>
+      <div class="wm" aria-label="tobi" style="margin-top:14px;--mk-bg:#F4A62A;--mk-fg:#18202E">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div>
+      <p class="tag">Гэр бүл нэг дор.</p>
+      <p class="lead">Тоби бол гэр бүлийн төлөвлөгөө, хоол, хүнс, хуваарь, санхүү, дурсамжийг нэг газар хөтөлдөг гэрийн менежер апп. Энэхүү брэндбук нь лого, өнгө, фонт, хэлний өнгө аяс, апп-ын бүрэлдэхүүнийг нэг стандартад оруулна.</p>
+      <div class="meta">
+        <span class="pill">Gerege × Qwen Hackathon</span>
+        <span class="pill">2026.11.03–11.06</span>
+        <span class="pill">999₮ / сар</span>
+      </div>
+    </div>
+    <figure class="toono-card" style="margin:0">
+      <svg aria-label="Тобигийн тэмдэг: тооно"><use href="#mark"/></svg>
+      <figcaption class="cap"><span>ТООНО · ГОЛОМТ</span><span>#F4A62A</span></figcaption>
+    </figure>
+  </header>
+</div>
+
+<!-- 01 ESSENCE -->
+<section class="ch" id="essence"><div class="wrap">
+  <div class="ch-head"><span class="num">01</span><div><h2>Брэндийн мөн чанар</h2><p class="lead">Гэр бүл бүрийн өдөр тутмын ачааллыг хөнгөлж, хамтдаа өнгөрүүлэх цагийг нэмэгдүүлэх.</p></div></div>
+
+  <div class="grid g3">
+    <div class="box"><span class="k">Эрхэм зорилго</span><h3>Гэрийн ажлыг нэг дор, ойлгомжтой болгох</h3><p>Хоол, хүнс, цэвэрлэгээ, хичээл, төсөв зэргийг гишүүн бүр хардаг нэг самбарт оруулна.</p></div>
+    <div class="box"><span class="k">Алсын хараа</span><h3>Монгол гэр бүл бүрийн дижитал голомт</h3><p>Өнөөдрийн хуваарь, ирээдүйн төлөвлөгөө, өнгөрсөн дурсамж нэг апп-д хадгалагдана.</p></div>
+    <div class="box"><span class="k">Брэндийн амлалт</span><h3>Хэн юу хийх нь тодорхой, хэн ч мартагдахгүй</h3><p>Аавын ажлын хуваарь, нялх хүүхдийн вакцин хүртэл бүгд цагтаа сануулагдана.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="box">
+      <span class="k">Брэндийн түүх</span>
+      <p class="quote" style="color:var(--ink)">Тооноор гэрэл ордог, голомтод гал асдаг. Гэр бүл тэр хоёрын дунд амьдардаг.</p>
+      <p style="margin-top:14px">Тобигийн тэмдэг гэрийн тооноос сэдэвлэсэн. Цагираг нь гэр бүлийг, загалмай хэлхээ нь бие биенээ түших тулгуурыг, 8 унь нь өдөр тутмын үйлсийг, төвийн цэг нь гэрийн голомтыг илэрхийлнэ.</p>
+    </div>
+    <div class="box">
+      <span class="k">Зорилтот хэрэглэгч</span>
+      <h3>25–45 насны эцэг эх, олон хүүхэдтэй гэр бүл</h3>
+      <ul class="clean">
+        <li><b>Шийдвэр гаргагч:</b> гэрийн санхүү, хуваарийг хөтөлдөг аав, ээж</li>
+        <li><b>Оролцогч:</b> хүүхдүүд (6–17 нас): хичээл, ном, гэрийн ажил</li>
+        <li><b>Хамааралтай:</b> нялх, бага насны хүүхэд (0–5 ой): эрүүл мэнд, өсөлт, дурсамж</li>
+        <li><b>Анхны хэрэглэгч:</b> Gerege-ийн ажилтнуудын гэр бүл. Компани ажилтандаа Тобийг урамшуулал болгон олгож, апп-ыг эхлээд дотооддоо туршина</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin:32px 0 6px">Үнэт зүйлс: Т · О · Б · И</h3>
+  <p class="muted" style="margin-bottom:14px">Брэндийн нэрийн үсэг бүр нэг үнэт зүйлийг илэрхийлнэ.</p>
+  <div class="grid g4">
+    <div class="box val"><span class="dot" style="background:#E0607E;color:#fff">Т</span><h3>Түшиг</h3><p>Гишүүд бие биенээ түшинэ. Ажлыг хуваан хийж, амжилтыг хамтдаа тэмдэглэнэ.</p></div>
+    <div class="box val"><span class="dot" style="background:#2E8B62;color:#fff">О</span><h3>Ойлгомжтой</h3><p>Энгийн, тодорхой. 6 настай хүүхэд ч өөрөө ашиглаж чадна.</p></div>
+    <div class="box val"><span class="dot" style="background:#2F6FDB;color:#fff">Б</span><h3>Бат бөх</h3><p>Өгөгдөл найдвартай хадгалагдана. Сануулга хоцрохгүй.</p></div>
+    <div class="box val"><span class="dot" style="background:#F4A62A;color:#241600">И</span><h3>Илч</h3><p>Гэрийн голомтын дулаан. Зөөлөн өнгө, хүнлэг үг, гэр бүлийн гишүүн шиг.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="box"><span class="k">Брэндийн зан төлөв</span>
+      <div class="tbl" style="border:0">
+      <table style="min-width:0"><tbody>
+        <tr><td><b>Тоби бол</b></td><td><b>Тоби биш</b></td></tr>
+        <tr><td>Анхааралтай туслах</td><td>Шахаж тушаадаг дарга</td></tr>
+        <tr><td>Найдвартай, тогтвортой</td><td>Хэт тоглоомлог, хүүхэдлэг</td></tr>
+        <tr><td>Тодорхой, товч</td><td>Нүсэр, техникийн хэллэгтэй</td></tr>
+        <tr><td>Урам өгдөг</td><td>Буруутгадаг, айлгадаг</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="box"><span class="k">Уриа үг</span>
+      <h3 style="font-size:22px">Гэр бүл нэг дор.</h3>
+      <p style="margin-top:6px">Үндсэн уриа. Лого, апп-ын нээлтийн дэлгэц, сошиалд хэрэглэнэ.</p>
+      <ul class="clean">
+        <li>«Голомтоо хамтдаа сахья.» Баяр, дурсамжийн кампанит ажилд</li>
+        <li>«Гэрийн ажил хөнгөн, гэр бүл ойр.» Танилцуулга, демо слайдад</li>
+        <li>Англиар: «Your family, in one place.»</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- 02 LOGO -->
+<section class="ch" id="logo"><div class="wrap">
+  <div class="ch-head"><span class="num">02</span><div><h2>Лого</h2><p class="lead">Лого нь тооно тэмдэг ба «tobi» бичиглэлээс бүрдэнэ. Тэмдэг нь «o» үсгийн байрыг эзэлнэ. Текст дотор брэндийн нэрийг «Тоби» гэж кириллээр, олон улсын материалд «TOBI» гэж бичнэ.</p></div></div>
+
+  <div class="grid g3">
+    <div class="logo-panel lp-light"><div class="wmk" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="lbl">Үндсэн · цагаан дэвсгэр</span></div>
+    <div class="logo-panel lp-dark"><div class="wmk" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="lbl">Урвуу · бараан дэвсгэр</span></div>
+    <div class="logo-panel lp-honey"><div class="wmk" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="lbl">Нэг өнгө · голомт шар дэвсгэр</span></div>
+  </div>
+
+  <div class="box anatomy" style="margin-top:16px">
+    <svg class="big" viewBox="-6 -6 60 60" aria-label="Тэмдгийн бүтэц">
+      <use href="#mark" x="0" y="0" width="48" height="48"/>
+      <g fill="none" stroke="var(--ink-3)" stroke-width=".3" stroke-dasharray="1 1">
+        <circle cx="24" cy="24" r="21"/><circle cx="24" cy="24" r="12.5"/><circle cx="24" cy="24" r="4.6"/>
+        <path d="M-4 24h56M24 -4v56"/>
+      </g>
+      <g font-family="JetBrains Mono, monospace" font-size="2.6" fill="var(--ink-2)">
+        <text x="44" y="6">1</text><text x="35.5" y="16">2</text><text x="25.5" y="21.5">4</text><text x="42.5" y="35">3</text>
+      </g>
+    </svg>
+    <div>
+      <span class="k">Тэмдгийн бүтэц</span>
+      <ol>
+        <li><b>Гадна дугуй.</b> Гэр, нэг дээвэр дор амьдрах гэр бүл.</li>
+        <li><b>Тооны цагираг ба хэлхээ.</b> Гишүүд бие биенээ түшдэг тулгуур.</li>
+        <li><b>8 унь.</b> Хоол, хүнс, хичээл, санхүү зэрэг өдөр тутмын үйлс.</li>
+        <li><b>Төвийн цэг.</b> Гэрийн голомт. Тэмдгийн жижиг хэмжээнд ч заавал харагдана.</li>
+      </ol>
+      <p class="muted" style="margin-top:12px;font-size:15px">Харьцаа: гадна дугуй 42, цагираг 25, голомт 9.2 нэгж. Шугамын зузаан 3.4, унийн зузаан 2.6 нэгж.</p>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="box">
+      <span class="k">Хамгаалалтын зай</span>
+      <div style="display:flex;justify-content:center;padding:12px 0 16px">
+        <div class="clear" style="--wm:var(--ink);--mk-bg:#F4A62A;--mk-fg:#18202E">
+          <span class="x" style="top:6px;left:50%;transform:translateX(-50%)">x</span>
+          <span class="x" style="bottom:6px;left:50%;transform:translateX(-50%)">x</span>
+          <span class="x" style="left:8px;top:50%;transform:translateY(-50%)">x</span>
+          <span class="x" style="right:8px;top:50%;transform:translateY(-50%)">x</span>
+          <div class="wmk" style="font-size:44px" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div>
+        </div>
+      </div>
+      <p>Логоны эргэн тойронд тэмдгийн өндрийн хагастай (x) тэнцэх хоосон зай үлдээнэ. Энэ зайд текст, зураг, бусад лого орохгүй.</p>
+    </div>
+    <div class="box">
+      <span class="k">Хамгийн бага хэмжээ</span>
+      <div style="display:flex;align-items:flex-end;gap:24px;padding:12px 0 16px;flex-wrap:wrap;--wm:var(--ink);--mk-bg:#F4A62A;--mk-fg:#18202E">
+        <div style="display:grid;gap:6px;justify-items:start"><div class="wmk" style="font-size:24px" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="mono">Бүтэн лого ≥ 72px</span></div>
+        <div style="display:grid;gap:6px;justify-items:start"><svg width="24" height="24" aria-hidden="true"><use href="#mark"/></svg><span class="mono">Тэмдэг ≥ 24px</span></div>
+        <div style="display:grid;gap:6px;justify-items:start"><svg width="16" height="16" aria-hidden="true"><use href="#mark"/></svg><span class="mono">Favicon 16px</span></div>
+      </div>
+      <p>Хэвлэлд бүтэн лого 20мм, тэмдэг 8мм-ээс багагүй. 24px-ээс жижиг үед унийг хасаж, цагираг ба голомтыг үлдээсэн хялбаршуулсан хувилбар хэрэглэнэ.</p>
+    </div>
+  </div>
+
+  <h3 style="margin:32px 0 14px">Буруу хэрэглээ</h3>
+  <div class="grid g4" style="--wm:#18202E;--mk-bg:#F4A62A;--mk-fg:#18202E">
+    <div class="dont"><div class="wmk" style="transform:scaleX(1.5)">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="no">Сунгаж, шахахгүй</span></div>
+    <div class="dont" style="--wm:#9B59B6;--mk-bg:#2ECC71;--mk-fg:#9B59B6"><div class="wmk">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="no">Брэндийн бус өнгө хэрэглэхгүй</span></div>
+    <div class="dont"><div class="wmk" style="transform:rotate(-14deg)">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div><span class="no">Эргүүлэхгүй</span></div>
+    <div class="dont"><div class="wmk" style="text-shadow:3px 3px 0 #2F6FDB,6px 6px 8px rgba(0,0,0,.4)">t<svg aria-hidden="true" style="filter:drop-shadow(3px 3px 2px rgba(0,0,0,.5))"><use href="#mark"/></svg>bi</div><span class="no">Сүүдэр, эффект нэмэхгүй</span></div>
+  </div>
+</div></section>
+
+<!-- 03 COLOR -->
+<section class="ch" id="color"><div class="wrap">
+  <div class="ch-head"><span class="num">03</span><div><h2>Өнгө</h2><p class="lead">Голомтын шар бол брэндийн дуу хоолой. Тэнгэрийн хөх найдвар, итгэлийг, бэлчээрийн ногоон өсөлт, хуримтлалыг илэрхийлнэ. Хөх өнгө нь Gerege-ийн брэндийн хөхтэй ойр тул хамтын материалд зохицно.</p></div></div>
+
+  <div class="grid g4">
+    <div class="sw"><div class="chip" style="background:#F4A62A;color:#241600"><b>Голомт шар</b><span class="mono">ҮНДСЭН</span></div>
+      <div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#F4A62A">#F4A62A</button></div><div class="row"><span class="mono">RGB</span><span class="tnum">244 166 42</span></div><div class="row"><span class="mono">CMYK</span><span class="tnum">0 32 83 4</span></div></div></div>
+    <div class="sw"><div class="chip" style="background:#18202E;color:#FFFFFF"><b>Шөнийн бараан</b><span class="mono">ТЕКСТ · ДЭВСГЭР</span></div>
+      <div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#18202E">#18202E</button></div><div class="row"><span class="mono">RGB</span><span class="tnum">24 32 46</span></div><div class="row"><span class="mono">CMYK</span><span class="tnum">48 30 0 82</span></div></div></div>
+    <div class="sw"><div class="chip" style="background:#2F6FDB;color:#FFFFFF"><b>Тэнгэр хөх</b><span class="mono">ҮЙЛДЭЛ · ХОЛБООС</span></div>
+      <div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#2F6FDB">#2F6FDB</button></div><div class="row"><span class="mono">RGB</span><span class="tnum">47 111 219</span></div><div class="row"><span class="mono">CMYK</span><span class="tnum">79 49 0 14</span></div></div></div>
+    <div class="sw"><div class="chip" style="background:#2E8B62;color:#FFFFFF"><b>Бэлчээр ногоон</b><span class="mono">ОРЛОГО · АМЖИЛТ</span></div>
+      <div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#2E8B62">#2E8B62</button></div><div class="row"><span class="mono">RGB</span><span class="tnum">46 139 98</span></div><div class="row"><span class="mono">CMYK</span><span class="tnum">67 0 29 45</span></div></div></div>
+  </div>
+
+  <div class="grid g4" style="margin-top:16px">
+    <div class="sw"><div class="chip" style="background:#FDEFD6;color:#241600;height:88px"><b>Шар зөөлөн</b></div><div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#FDEFD6">#FDEFD6</button></div></div></div>
+    <div class="sw"><div class="chip" style="background:#F5F6F8;color:#18202E;height:88px"><b>Өглөөний цагаан</b></div><div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#F5F6F8">#F5F6F8</button></div></div></div>
+    <div class="sw"><div class="chip" style="background:#4A5568;color:#FFFFFF;height:88px"><b>Чулуун саарал</b></div><div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#4A5568">#4A5568</button></div></div></div>
+    <div class="sw"><div class="chip" style="background:#C93C3C;color:#FFFFFF;height:88px"><b>Анхааруулга улаан</b></div><div class="info"><div class="row"><span class="mono">HEX</span><button class="copy" data-c="#C93C3C">#C93C3C</button></div></div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="box">
+      <span class="k">Өнгөний харьцаа</span>
+      <p>Дэлгэцийн 60% нь цайвар дэвсгэр, 30% нь бараан текст ба карт, 10% нь голомт шар. Шар өнгийг гол үйлдэл, онцлох мэдээлэлд л хэрэглэнэ.</p>
+      <div class="ratio">
+        <div style="flex:6;background:#F5F6F8;color:#4A5568">60%</div>
+        <div style="flex:3;background:#18202E;color:#fff">30%</div>
+        <div style="flex:1;background:#F4A62A;color:#241600">10</div>
+      </div>
+    </div>
+    <div class="box">
+      <span class="k">Санхүүгийн утгын өнгө</span>
+      <p>Орлого ногоон, зарлага улаан биш саарал өнгөтэй байна. Зарлага бол буруу зүйл биш тул улааныг зөвхөн төсөв хэтэрсэн үед хэрэглэнэ.</p>
+      <div style="display:grid;gap:6px;margin-top:12px;font-size:15px" class="tnum">
+        <div style="display:flex;justify-content:space-between"><span>Цалин</span><b style="color:var(--pine)">+3,200,000₮</b></div>
+        <div style="display:flex;justify-content:space-between"><span>Хүнс</span><b style="color:var(--ink-2)">−145,000₮</b></div>
+        <div style="display:flex;justify-content:space-between"><span>Баярын зардал: төсөв хэтэрсэн</span><b style="color:var(--danger)">−62,000₮</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:16px">
+    <span class="k">Гэр бүлийн гишүүдийн өнгө</span>
+    <p style="margin-bottom:14px">Гишүүн бүр өөрийн өнгөтэй. Хуанли, хуваарь, дурсамжийн цомогт хэний үйл явдал болохыг өнгөөр нь шууд таньна. Шинэ гишүүн нэмэхэд дараагийн өнгө автоматаар оноогдоно.</p>
+    <div class="members">
+      <div class="mem"><span class="av" style="background:#2F6FDB">А</span><div>Аав<small>#2F6FDB</small></div></div>
+      <div class="mem"><span class="av" style="background:#D9506F">Э</span><div>Ээж<small>#D9506F</small></div></div>
+      <div class="mem"><span class="av" style="background:#8A5CD6">О</span><div>Охин · 6–17 нас<small>#8A5CD6</small></div></div>
+      <div class="mem"><span class="av" style="background:#2E8B62">Х</span><div>Хүү · 6–17 нас<small>#2E8B62</small></div></div>
+      <div class="mem"><span class="av" style="background:#E0951F">Б</span><div>Бяцхан · 0–5 ой<small>#E0951F</small></div></div>
+      <div class="mem"><span class="av" style="background:#168A9C">+</span><div>Нэмэлт 1<small>#168A9C</small></div></div>
+      <div class="mem"><span class="av" style="background:#C2621F">+</span><div>Нэмэлт 2<small>#C2621F</small></div></div>
+      <div class="mem"><span class="av" style="background:#5E6B80">+</span><div>Нэмэлт 3<small>#5E6B80</small></div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 04 TYPE -->
+<section class="ch" id="type"><div class="wrap">
+  <div class="ch-head"><span class="num">04</span><div><h2>Фонт</h2><p class="lead">Хоёр фонт хоёулаа кирилл, Ө, Ү үсгийг бүрэн дэмждэг, Google Fonts-оос үнэгүй. Unbounded нь бөөрөнхий, бат бөх хэлбэрээрээ гарчиг, тоонд; Onest нь тод уншигдах чадвараараа үндсэн бичвэрт хэрэглэгдэнэ.</p></div></div>
+
+  <div class="grid g2">
+    <div class="box"><span class="k">Гарчгийн фонт · Unbounded</span><p class="alpha" style="color:var(--ink)">Аа Бб Өө Үү<br>₮ 0123456789</p><p style="margin-top:8px">Жин: Medium 500, Bold 700. Гарчиг, тоо, лого бичиглэлд л хэрэглэнэ. Урт бичвэрт хэрэглэхгүй.</p></div>
+    <div class="box"><span class="k">Үндсэн фонт · Onest</span><p class="alpha" style="font-family:var(--f-body);font-weight:500;color:var(--ink)">Аа Бб Өө Үү<br>₮ 0123456789</p><p style="margin-top:8px">Жин: Regular 400, Medium 500, SemiBold 600. Бичвэр, товч, маягт, мэдэгдэлд хэрэглэнэ.</p></div>
+  </div>
+
+  <div class="spec" style="margin-top:24px">
+    <div class="r"><span class="mono">Display · 40/48<br>Unbounded 700</span><div style="font:700 clamp(28px,4vw,40px)/1.2 var(--f-display)">11-р сарын төлөвлөгөө</div></div>
+    <div class="r"><span class="mono">H1 · 28/36<br>Unbounded 500</span><div style="font:500 28px/1.3 var(--f-display)">Энэ 7 хоногийн хоолны цэс</div></div>
+    <div class="r"><span class="mono">H2 · 20/28<br>Unbounded 500</span><div style="font:500 20px/1.4 var(--f-display)">Хүнсний жагсаалт</div></div>
+    <div class="r"><span class="mono">Body · 16/26<br>Onest 400</span><div>Бямба гарагт Богд уулын Зайсанаас Түргэний ам хүртэл явган аялал хийнэ. Хүүхдүүдэд дулаан хувцас, 2 литр ус, хөнгөн хоол бэлдэнэ.</div></div>
+    <div class="r"><span class="mono">Label · 14/20<br>Onest 600</span><div style="font-weight:600;font-size:14px">Хүнс нэмэх</div></div>
+    <div class="r"><span class="mono">Caption · 12/16<br>JetBrains Mono</span><div class="mono" style="font-size:12px">2026.11.04 · 18:30 · ЭЭЖ</div></div>
+  </div>
+
+  <div class="box" style="margin-top:16px">
+    <span class="k">Тоо, огноо бичих дүрэм</span>
+    <ul class="clean">
+      <li>Мөнгөн дүн: <b class="tnum">2,400,000₮</b>. Мянгатыг таслалаар тусгаарлаж, ₮ тэмдгийг зайгүй ард нь бичнэ.</li>
+      <li>Огноо: <b class="tnum">2026.11.04</b>, товчилбол <b>11-р сарын 4</b>. Цаг 24 цагийн хэлбэрээр: <b class="tnum">18:30</b>.</li>
+      <li>Хувь: <b class="tnum">65%</b>. Хүснэгт, төсвийн карт дахь тоонд tabular figures хэрэглэж баганыг тэгшилнэ.</li>
+    </ul>
+  </div>
+</div></section>
+
+<!-- 05 ICONS -->
+<section class="ch" id="icons"><div class="wrap">
+  <div class="ch-head"><span class="num">05</span><div><h2>Иконууд</h2><p class="lead">24px торон дээр 1.75px зузаантай, бөөрөнхий төгсгөлтэй шугаман икон. Модуль бүр шар зөөлөн дэвсгэртэй 44px дөрвөлжинд байрлана. BRD-ийн 14 модулийг дараах байдлаар илэрхийлнэ.</p></div></div>
+  <div class="icons">
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Сар, жилийн төлөвлөгөө</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M8.5 7.5c0-1.5 1-2 1-3.5M14.5 7.5c0-1.5 1-2 1-3.5"/></svg></span>Хоолны цэс</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 7H6.6"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>Хүнсний худалдан авалт</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M11 3l1.8 4.7 4.7 1.8-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8Z"/><path d="M18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8Z"/></svg></span>Цэвэрлэгээний хуваарь</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>Хичээл, ажлын хуваарь</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.5h18M16 15h1.5"/></svg></span>Орлого, зарлага</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M11 4a8 8 0 1 0 9 9h-9Z"/><path d="M14.5 3.3A7.5 7.5 0 0 1 20.7 9.5h-6.2Z"/></svg></span>Өр, орлогын харьцаа</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3Z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg></span>Уншсан ном</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M2.5 19.5 9 8l4 7 2.5-4 6 8.5Z"/><circle cx="17" cy="5.5" r="1.8"/></svg></span>Чөлөөт цаг, аялал</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M12 3 20.5 7.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></svg></span>Эд хөрөнгийн бүртгэл</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><rect x="3.5" y="10" width="17" height="10" rx="2"/><path d="M2.5 10h19M12 10v10M12 10c-1.5-4-6-4-5.5-1.5S12 10 12 10Zm0 0c1.5-4 6-4 5.5-1.5S12 10 12 10Z"/></svg></span>Баяр, тэмдэглэлт өдөр</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M14.5 4.2a4.5 4.5 0 0 0-5.3 6L3.8 15.6a2 2 0 0 0 2.8 2.8l5.4-5.4a4.5 4.5 0 0 0 6-5.3l-2.7 2.7-2.6-.2-.2-2.6Z"/></svg></span>Засвар, тохижилт</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><path d="M12 20s-8-4.7-8-10.5A4.5 4.5 0 0 1 12 6.7a4.5 4.5 0 0 1 8 2.8C20 15.3 12 20 12 20Z"/><path d="M7 12h2.5l1.5-2.5 2 5 1.5-2.5H17"/></svg></span>Эрүүл мэнд</div>
+    <div class="ic"><span class="g"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 3.5 3 3-2.5 4 3.5"/></svg></span>Дурсамжийн цомог</div>
+  </div>
+  <p class="muted" style="margin-top:14px;font-size:14px">Эможи-г модулийн тэмдэг болгон хэрэглэхгүй. Хүүхдийн дэлгэц, баярын мэндчилгээнд л хязгаартай хэрэглэж болно.</p>
+</div></section>
+
+<!-- 06 VOICE -->
+<section class="ch" id="voice"><div class="wrap">
+  <div class="ch-head"><span class="num">06</span><div><h2>Хэлний өнгө аяс</h2><p class="lead">Тоби гэр бүлийн ухаалаг, тайван гишүүн шиг ярина. Хэрэглэгчид «та» гэж хандана. Хүүхдийн дэлгэц дээр илүү энгийн, богино өгүүлбэр хэрэглэнэ.</p></div></div>
+
+  <div class="grid g3">
+    <div class="box"><span class="k">Зарчим 1</span><h3>Тодорхой</h3><p>Хэн, юу, хэзээ гэдгийг эхэнд нь хэлнэ. Нэг мэдэгдэлд нэг санаа.</p></div>
+    <div class="box"><span class="k">Зарчим 2</span><h3>Дулаан</h3><p>Гишүүдийг нэрээр нь дуудна. Амжилтыг тэмдэглэж, урам өгнө.</p></div>
+    <div class="box"><span class="k">Зарчим 3</span><h3>Буруутгахгүй</h3><p>Хэтэрсэн зардал, мартсан ажлыг дүгнэлтгүйгээр, шийдэлтэй нь хэлнэ.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="box"><span class="k">Сануулга</span>
+      <div class="say"><div class="yes"><b>ИНГЭЖ</b>Маргааш 10:30-д Бяцхангийн ээлжит вакцин. Эрүүл мэндийн дэвтрээ мартуузай.</div><div class="no"><b>ИНГЭЖ БИШ</b>АНХААРУУЛГА!!! Эрүүл мэндийн үзлэгийн хугацаа ойртлоо!</div></div></div>
+    <div class="box"><span class="k">Санхүү</span>
+      <div class="say"><div class="yes"><b>ИНГЭЖ</b>Энэ сард хүнсэнд төлөвлөснөөс 82,000₮ бага зарцууллаа. Сайн байна!</div><div class="no"><b>ИНГЭЖ БИШ</b>Та хэт их зарцуулж байна. Төсвөө хянана уу.</div></div></div>
+    <div class="box"><span class="k">Алдаа</span>
+      <div class="say"><div class="yes"><b>ИНГЭЖ</b>Төлбөр баталгаажаагүй байна. QPay апп-аа нээж төлбөрөө дуусгаад «Шалгах» товчийг дарна уу.</div><div class="no"><b>ИНГЭЖ БИШ</b>Алдаа гарлаа. Код 402.</div></div></div>
+    <div class="box"><span class="k">Хоосон төлөв</span>
+      <div class="say"><div class="yes"><b>ИНГЭЖ</b>Гэр бүлийн анхны дурсамжаа нэмээрэй. Нэг зураг, хэдэн үг л хангалттай.</div><div class="no"><b>ИНГЭЖ БИШ</b>Мэдээлэл олдсонгүй.</div></div></div>
+  </div>
+
+  <div class="box" style="margin-top:16px">
+    <span class="k">Тоби AI туслах (Qwen дээр ажиллана)</span>
+    <p>AI туслах нь Тобигийн хоолойгоор ярина: товч, хэрэгтэй, санал болгохдоо сонголт үлдээнэ. Эрүүл мэндийн асуултад «эмчийн зөвлөгөөг орлохгүй» гэж заавал тэмдэглэнэ. Өгөгдөл өөрчлөхийн өмнө баталгаажуулалт асууна.</p>
+    <div class="say"><div class="yes"><b>ИНГЭЖ</b>Энэ 7 хоногийн цэсийг гаргалаа: 5 оройн хоол, нийт хүнс 186,000₮ орчим. Хүнсний жагсаалтад нэмэх үү?</div><div class="no"><b>ИНГЭЖ БИШ</b>Би AI учраас таны гэр бүлд хамгийн тохиромжтой цэсийг тодорхойлсон. Цэс автоматаар хадгалагдлаа.</div></div>
+  </div>
+</div></section>
+
+<!-- 07 UI -->
+<section class="ch" id="ui"><div class="wrap">
+  <div class="ch-head"><span class="num">07</span><div><h2>UI бүрэлдэхүүн</h2><p class="lead">Бөөрөнхий булан (8, 14, 22px), зөөлөн хүрээ, сүүдэргүй карт. Товч 46px-ээс багагүй өндөртэй тул хүүхэд, ахмад хүн ч амархан дарна. Бүх өнгө цайвар, бараан горимд хоёуланд нь ажиллана.</p></div></div>
+
+  <div class="grid g2">
+    <div class="box"><span class="k">Товчнууд</span>
+      <div class="btns"><button class="btn btn-p" type="button">Хүнс нэмэх</button><button class="btn btn-s" type="button">Хуваарь харах</button><button class="btn btn-g" type="button">Болих</button><button class="btn btn-p" type="button" disabled>Хадгалах</button></div>
+      <p style="margin-top:14px">Нэг дэлгэцэнд нэг л шар үндсэн товч. Хоёрдогч үйлдэлд хүрээтэй товч хэрэглэнэ.</p>
+    </div>
+    <div class="box"><span class="k">Мэдэгдэл</span>
+      <div class="toast"><svg aria-hidden="true"><use href="#mark"/></svg><div><b>Хүү цэвэрлэгээгээ дуусгалаа</b><br><span style="opacity:.8">Бямба гарагийн өрөөний цэвэрлэгээ · 3/3 ажил</span></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><span class="badge">Qwen AI</span><span class="badge h">Шинэ</span><span class="badge" style="background:var(--pine-soft);color:var(--pine)">Дууссан</span><span class="badge" style="background:var(--danger-soft);color:var(--danger)">Хугацаа хэтэрсэн</span></div>
+    </div>
+    <div class="box budget"><span class="k">Төсвийн карт</span>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="big">1,560,000₮</span><span class="mono">2,400,000₮-аас</span></div>
+      <div class="bar" role="img" aria-label="Төсвийн 65% зарцуулсан"><i></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2)" class="tnum"><span>11-р сар · 65% зарцуулсан</span><span>840,000₮ үлдсэн</span></div>
+    </div>
+    <div class="price"><span class="k">Үнийн карт</span>
+      <h3>Тоби Гэр бүлийн багц</h3>
+      <div class="amt tnum">999₮ <small>/ сар</small></div>
+      <p class="muted" style="font-size:14px">Гишүүний тоо хязгааргүй. 14 үндсэн модуль. Урьдчилж төлнө.</p>
+      <div class="btns" style="margin-top:16px"><button class="btn btn-q" type="button">QPay-ээр төлөх</button><span class="mono">≈ 33₮ / өдөр</span></div>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:14px;font-size:14px">QPay товчийг энд жишээ байдлаар үзүүлэв. Бодит апп-д QPay-ийн албан ёсны лого, товчны загварыг тэдний брэндийн зааврын дагуу хэрэглэнэ.</p>
+</div></section>
+
+<!-- 08 APPLICATIONS -->
+<section class="ch" id="apply"><div class="wrap">
+  <div class="ch-head"><span class="num">08</span><div><h2>Хэрэглээний жишээ</h2><p class="lead">Нүүр дэлгэц нь өнөөдрийн хамгийн чухал гурван зүйлийг харуулна: хуваарь, хүнс, төсөв. Доорх өгөгдөл жишээ.</p></div></div>
+
+  <div class="apps">
+    <div class="phone" role="img" aria-label="Тоби апп-ын нүүр дэлгэцийн жишээ">
+      <div class="scr">
+        <div class="top"><div><span class="mono">ЛХАГВА · 11.04</span><div class="hi">Өглөөний мэнд,<br>Болдын гэр бүл</div></div>
+          <div class="avs"><span style="background:#2F6FDB">А</span><span style="background:#D9506F">Э</span><span style="background:#8A5CD6">О</span><span style="background:#2E8B62">Х</span><span style="background:#E0951F">Б</span></div></div>
+        <div class="card"><span class="k">Өнөөдөр</span>
+          <div class="item"><span><b style="color:#8A5CD6">●</b> Охин · Англи хэл</span><span class="tnum">16:00</span></div>
+          <div class="item"><span><b style="color:#2E8B62">●</b> Хүү · Хог гаргах</span><span class="tnum">19:00</span></div>
+          <div class="item"><span><b style="color:#E0951F">●</b> Бяцхан · Вакцин</span><span class="tnum">Маргааш</span></div></div>
+        <div class="card"><span class="k">Хүнс · 4 зүйл</span>Сүү 2л, өндөг 10ш, талх, алим 1кг</div>
+        <div class="card budget"><span class="k">11-р сарын төсөв</span><div style="display:flex;justify-content:space-between" class="tnum"><b>1,560,000₮</b><span class="muted">65%</span></div><div class="bar" style="margin:8px 0 0"><i></i></div></div>
+        <div class="card ai"><span class="k" style="color:var(--ink-2)">Тоби AI</span>Энэ 7 хоногийн хоолны цэс бэлэн боллоо. Харах уу?</div>
+        <div class="tabs">
+          <span class="on"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4Z"/></svg>Нүүр</span>
+          <span><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17"/></svg>Хуанли</span>
+          <span><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.5h18"/></svg>Санхүү</span>
+          <span><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m4 17 5-4.5 3.5 3 3-2.5 4 3.5"/></svg>Дурсамж</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:16px;min-width:0">
+      <div class="box"><span class="k">Апп-ын икон</span>
+        <div class="appicons">
+          <div class="appicon" style="width:96px;height:96px;border-radius:22px"><svg aria-hidden="true"><use href="#mark"/></svg></div>
+          <div class="appicon" style="width:60px;height:60px;border-radius:14px"><svg aria-hidden="true"><use href="#mark"/></svg></div>
+          <div class="appicon" style="width:40px;height:40px;border-radius:10px"><svg aria-hidden="true"><use href="#mark"/></svg></div>
+        </div>
+        <p style="margin-top:12px">Голомт шар дэвсгэр дээр бараан тэмдэг. Бичиглэл оруулахгүй. iOS 1024px, Android 512px эх файлаас гаргана.</p>
+      </div>
+      <div class="grid g2">
+        <div class="post"><span class="mono" style="color:#AEB7C6">СОШИАЛ ПОСТ · 1080×1080</span><p class="t">11-р сарын гэр бүлийн төлөвлөгөө <em>5 минутад.</em></p><div class="wmk" aria-label="tobi">t<svg aria-hidden="true"><use href="#mark"/></svg>bi</div></div>
+        <div class="box"><span class="k">Зураг, гэрэл зураг</span>
+          <ul class="clean"><li>Жинхэнэ гэр бүлийн байгалийн гэрэлтэй зураг. Студийн, хэт янзалсан зураг хэрэглэхгүй.</li><li>Гэр, орон сууц, Монгол байгаль, хамтдаа хийж буй үйлдэл.</li><li>Хүүхдийн нүүрийг сошиалд эцэг эхийн зөвшөөрөлгүй нийтлэхгүй.</li><li>Хакатонд зөвхөн туршилтын өгөгдөл, зохиомол нэр хэрэглэнэ.</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 09 HACKATHON -->
+<section class="ch" id="hackathon"><div class="wrap">
+  <div class="ch-head"><span class="num">09</span><div><h2>Gerege × Qwen хакатонд хэрэглэх</h2><p class="lead">Хакатоны «ЗААВАЛ» шаардлагуудыг брэнд, дэлгэц дээр хэрхэн харуулах вэ. Эх сурвалж: хакатоны албан ёсны удирдамж (qwen-ub-2026-recap.vercel.app/hackathon).</p></div></div>
+
+  <ul class="check">
+    <li><i>1</i><div><b>Шүүлтийн өдөр бүх AI дуудлага Qwen дээр</b><p>Тоби AI (цэс гаргах, төсөв шинжлэх, тэмдэглэл товчлох) Alibaba Cloud Model Studio-ийн Qwen загвараар ажиллана. Апп-д «Qwen AI» гэсэн текст тэмдэглэгээ хэрэглэнэ. Qwen-ийн лого нь Alibaba Group-ийн барааны тэмдэг тул тэдний зааврын дагуу л хэрэглэнэ.</p></div></li>
+    <li><i>2</i><div><b>Урьдчилсан төлбөр QPay-ээр</b><p>Үнийн карт, бүртгэлийн урсгалд «Урьдчилж төлнө» гэж тод бичиж, QPay товчийг гол үйлдэл болгоно. Хакатонд QPay зөвхөн sandbox.</p></div></li>
+    <li><i>3</i><div><b>Зах зээлийн 2–3 үйлчилгээтэй үнийн харьцуулалт</b><p>1 слайдад доорх загвараар үзүүлнэ. Харьцуулах үйлчилгээний үнийг демогоос өмнө тэдний вэб сайтаас шалгаж, огноотой нь бичнэ.</p></div></li>
+    <li><i>4</i><div><b>Production-д бэлэн UI/UX, хүртээмж</b><p>Текст, дэвсгэрийн контраст 4.5:1-ээс багагүй, товч 46px-ээс багагүй өндөр, бараан горим, утас дээр бүрэн ажиллах.</p></div></li>
+    <li><i>5</i><div><b>Бодит харилцагчийн өгөгдөлгүй</b><p>Демод «Болдын гэр бүл» мэтийн зохиомол гэр бүл, туршилтын өгөгдөл хэрэглэнэ.</p></div></li>
+  </ul>
+
+  <h3 style="margin:28px 0 12px">Демо слайдын үнийн харьцуулалтын загвар</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Үйлчилгээ</th><th>Сарын үнэ</th><th>Гишүүн</th><th>Монгол хэл</th><th>AI туслах</th><th>QPay</th></tr></thead>
+      <tbody>
+        <tr><td><b>Тоби</b></td><td class="tnum"><b>999₮</b></td><td>Хязгааргүй</td><td>Тийм</td><td>Тийм, Qwen</td><td>Тийм</td></tr>
+        <tr><td class="muted">Харьцуулах үйлчилгээ 1</td><td class="muted">шалгаж бичнэ</td><td class="muted">…</td><td class="muted">…</td><td class="muted">…</td><td class="muted">…</td></tr>
+        <tr><td class="muted">Харьцуулах үйлчилгээ 2</td><td class="muted">шалгаж бичнэ</td><td class="muted">…</td><td class="muted">…</td><td class="muted">…</td><td class="muted">…</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted" style="margin-top:12px;font-size:14px">Тобигийн мөрийг шар хүрээгээр онцолно. Бусад үйлчилгээг саарал өнгөөр, логогүй бичнэ.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap">Тоби брэндбук 1.0 · 2026.11.04 · Gerege × Qwen Hackathon-д зориулав. Qwen, Alibaba Cloud нь Alibaba Group-ийн, QPay нь QPay-ийн барааны тэмдэг.</div></footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var v=b.dataset.c, t=b.textContent;
+    var done=function(){b.textContent='Хуулагдлаа';setTimeout(function(){b.textContent=t},1200)};
+    try{navigator.clipboard.writeText(v).then(done,function(){sel(b)})}catch(e){sel(b)}
+  });
+});
+function sel(el){try{var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r)}catch(e){}}
+</script>
+
+</body></html>

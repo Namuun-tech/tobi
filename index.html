@@ -1,0 +1,620 @@
+<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Тоби демо</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: desktop = demo guide on the left + phone-sized app on the right; phone = app first, guide below */
+:root{
+  --gold:#F4A62A; --gold-soft:#FDEFD6; --ink:#18202E; --sky:#2F6FDB; --grass:#2E8B62; --red:#C93C3C;
+  --bg:#F5F6F8; --surface:#FFFFFF; --surface-2:#F0F2F6; --fg:#18202E; --muted:#4A5568; --line:#E1E5EC;
+  --on-gold:#18202E; --gold-ink:#9A5F05; --shadow:0 20px 60px rgba(24,32,46,.14);
+  --m-dad:#2F6FDB; --m-mom:#D9506F; --m-girl:#8A5CD6; --m-boy:#2E8B62; --m-baby:#E0951F;
+  --f-head:"Unbounded","Onest",system-ui,sans-serif;
+  --f-body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F141D; --surface:#18202E; --surface-2:#212B3C; --fg:#EEF1F6; --muted:#A6B0C2; --line:#2C374A;
+  --gold-soft:#3A2C12; --gold-ink:#F4B24A; --shadow:0 20px 60px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F141D; --surface:#18202E; --surface-2:#212B3C; --fg:#EEF1F6; --muted:#A6B0C2; --line:#2C374A;
+  --gold-soft:#3A2C12; --gold-ink:#F4B24A; --shadow:0 20px 60px rgba(0,0,0,.5); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:40px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:28px}.guide{order:2}.phone{order:1}}
+
+/* ---------- guide ---------- */
+.guide{min-width:0;padding-top:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.wordmark{font:700 34px/1 var(--f-head);letter-spacing:-.02em;display:flex;align-items:center}
+.wordmark svg{width:30px;height:30px;margin:0 1px}
+.eyebrow{font:600 11px/1.4 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.guide h1{font:700 clamp(24px,3.2vw,34px)/1.2 var(--f-head);letter-spacing:-.02em;margin:22px 0 10px;text-wrap:balance}
+.guide p.lead{color:var(--muted);max-width:60ch;margin:0 0 22px}
+.notice{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--muted);max-width:62ch}
+.notice b{color:var(--fg)}
+.steps{list-style:none;padding:0;margin:26px 0;display:grid;gap:10px;max-width:62ch}
+.steps li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+.steps .n{width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--on-gold);font:700 13px/30px var(--f-head);text-align:center}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:14px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:62ch;margin-top:8px}
+@media (max-width:520px){.facts{grid-template-columns:minmax(0,1fr)}}
+.fact{border-top:2px solid var(--fg);padding-top:8px}
+.fact strong{font:700 20px/1.2 var(--f-head);display:block}
+.fact small{color:var(--muted);font-size:12.5px}
+.guide .reset{margin-top:22px;background:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13px;color:var(--muted)}
+
+/* ---------- phone ---------- */
+.phone{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);overflow:hidden;
+  height:800px;max-height:calc(100dvh - 32px);min-height:620px;display:flex;flex-direction:column;width:100%;max-width:410px;justify-self:center}
+@media (max-width:900px){.phone{border-radius:22px}}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;gap:10px}
+.top .wordmark{font-size:22px}.top .wordmark svg{width:20px;height:20px}
+.sub-pill{border:none;border-radius:999px;padding:6px 11px;font:600 12px/1 var(--f-body);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sub-pill.off{background:var(--gold);color:var(--on-gold)}
+.sub-pill.on{background:var(--surface-2);color:var(--grass)}
+.sub-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.view{flex:1;overflow-y:auto;padding:4px 18px 20px;min-height:0}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--surface);padding:6px 4px 8px}
+.nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);padding:6px 0;border-radius:10px}
+.nav button svg{width:22px;height:22px}
+.nav button[aria-current="page"]{color:var(--fg);font-weight:600}
+.nav button[aria-current="page"] svg{color:var(--gold-ink)}
+
+h2.vt{font:700 20px/1.25 var(--f-head);letter-spacing:-.01em;margin:6px 0 4px}
+.vsub{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+.sec{margin-top:20px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.sec-h h3{font:600 15px/1.3 var(--f-body);margin:0}
+.link{background:none;border:none;color:var(--sky);font-size:13px;padding:0}
+
+.members{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.mem{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:56px;font-size:11.5px;color:var(--muted)}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 15px/1 var(--f-head)}
+.av.sm{width:26px;height:26px;font-size:11px}
+
+.card{background:var(--surface-2);border-radius:16px;padding:14px}
+.pay-banner{background:var(--gold-soft);border-radius:16px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+.pay-banner b{font-family:var(--f-head);font-size:14px}
+.pay-banner p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:600;font-size:14px;background:var(--fg);color:var(--surface)}
+.btn.gold{background:var(--gold);color:var(--on-gold)}
+.btn.ghost{background:var(--surface-2);color:var(--fg)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+
+.ev{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:none}
+.ev time{font:600 13px/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.ev .t{font-weight:500;line-height:1.3}
+.ev .w{font-size:12px;color:var(--muted)}
+.ev .bar{width:4px;height:30px;border-radius:2px;justify-self:end}
+
+.ask{display:flex;gap:8px;align-items:center;background:var(--surface-2);border-radius:14px;padding:6px 6px 6px 14px}
+.ask input{flex:1;border:none;background:none;min-width:0;padding:6px 0}
+.ask input:focus{outline:none}
+.ask:focus-within{outline:2px solid var(--sky)}
+.ask button{border:none;background:var(--gold);color:var(--on-gold);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 10px;font-size:12.5px}
+
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.kv{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.big{font:700 24px/1.1 var(--f-head);font-variant-numeric:tabular-nums}
+
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+.day{border:none;background:none;border-radius:12px;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted)}
+.day b{font:600 15px/1.2 var(--f-body);color:var(--fg);font-variant-numeric:tabular-nums}
+.day.sel{background:var(--fg);color:var(--surface)}
+.day.sel b{color:var(--surface)}
+.day .dots{display:flex;gap:2px;height:5px}
+.day .dots i{width:5px;height:5px;border-radius:50%}
+
+/* list */
+.item{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.item input[type=checkbox]{width:20px;height:20px;accent-color:var(--grass);flex:none}
+.item .nm{flex:1;min-width:0}
+.item.done .nm{text-decoration:line-through;color:var(--muted)}
+.item .qty{font:12px var(--f-mono);color:var(--muted)}
+.tag{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.addrow{display:flex;gap:8px;margin:10px 0}
+.addrow input,.field input,.field select{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px}
+
+/* budget */
+.cats{display:grid;gap:10px}
+.cat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13.5px}
+.cat .meter{grid-column:1/-1;height:6px}
+.cat span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}
+.tx{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.tx .amt{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.tx small{color:var(--muted);font-size:12px}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;padding-bottom:6px}
+.msg{max-width:86%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.45;white-space:pre-line}
+.msg.u{align-self:flex-end;background:var(--fg);color:var(--surface);border-bottom-right-radius:4px}
+.msg.b{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:4px}
+.meta{display:block;margin-top:6px;font:11px var(--f-mono);color:var(--muted)}
+.confirm{margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;white-space:normal}
+.confirm .row{display:flex;gap:6px;margin-top:8px}
+.typing{align-self:flex-start;display:flex;gap:4px;padding:12px 14px;background:var(--surface-2);border-radius:16px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bl 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.chatbar{border-top:1px solid var(--line);padding:10px 18px}
+.demo-flag{font:11px/1.4 var(--f-mono);color:var(--muted);text-align:center;margin:0 0 8px}
+
+/* sheet */
+.overlay{position:absolute;inset:0;background:rgba(15,20,29,.45);display:flex;align-items:flex-end;z-index:20}
+.sheet{background:var(--surface);width:100%;max-height:92%;overflow-y:auto;border-radius:24px 24px 0 0;padding:18px 18px 22px}
+.sheet h3{font:700 18px/1.3 var(--f-head);margin:0 0 4px}
+.sheet .x{float:right;background:var(--surface-2);border:none;border-radius:50%;width:32px;height:32px}
+.qr{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.qr canvas{border-radius:12px;background:#fff;padding:10px;max-width:100%}
+.banks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.bank{border:1px solid var(--line);border-radius:10px;padding:8px 2px;font-size:11px;text-align:center;color:var(--muted)}
+.log{font:11.5px/1.6 var(--f-mono);background:var(--surface-2);border-radius:12px;padding:10px 12px;margin-top:12px;overflow-x:auto;white-space:pre}
+.log .ok{color:var(--grass)}
+.field{display:grid;gap:4px;margin-top:10px;font-size:13px;color:var(--muted)}
+.cmp{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.cmp td{padding:7px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.cmp td:last-child{text-align:right;font-weight:600}
+.cmp tr.us td{color:var(--gold-ink)}
+
+.toast{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);background:var(--fg);color:var(--surface);padding:9px 14px;border-radius:999px;font-size:13px;z-index:30;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.vac{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.vac small{color:var(--muted);font-size:12px}
+.lock{font-size:11px;color:var(--gold-ink);font-weight:600}
+@media (prefers-reduced-motion: reduce){.typing i{animation:none}}
+</style></head><body>
+
+<div class="wrap">
+  <section class="guide" aria-label="Демогийн тайлбар">
+    <div class="brand"><div class="wordmark">t<span id="mk1"></span>bi</div></div>
+    <p class="eyebrow" style="margin-top:10px">Gerege × Qwen Hackathon · Ажилладаг демо</p>
+    <h1>Гэр бүлийн хуанли, худалдан авалт, төсөв, эрүүл мэнд нэг дор. Сард 999₮.</h1>
+    <p class="lead">Тоби бол гэр бүлийн гэрийн менежер. Хүн бүр өөрийн өнгөтэй, Тоби AI туслах нь хуанли, төсөв, жагсаалт руу шууд хандаж ажилладаг.</p>
+    <div class="notice"><b>Демо горим.</b> Энэ хуудсан дээр бүх өгөгдөл зохиомол. QPay нь sandbox урсгалыг дуурайна, бодит мөнгө авахгүй. Тоби AI нь серверт Qwen түлхүүр тохируулсан үед Alibaba Cloud Model Studio дээрх Qwen-ээр хариулна. Түлхүүргүй үед хариуг урьдчилан бэлтгэсэн логикоор дуурайна. Чатын доор аль горимд байгаа нь бичигдэнэ.</div>
+    <ol class="steps">
+      <li><span class="n">1</span><div><b>999₮-өөр захиалга идэвхжүүлэх</b><span>Баруун дээд буланд «999₮ · Идэвхжүүлэх». QPay нэхэмжлэх, QR, callback, төлбөр шалгах алхмууд log-д харагдана.</span></div></li>
+      <li><span class="n">2</span><div><b>Тоби-гоос асуух</b><span>«Энэ сар хоолонд хэдийг зарцуулсан бэ?» Тоби <code>get_budget_summary</code> хэрэгслийг дуудаж хариулна.</span></div></li>
+      <li><span class="n">3</span><div><b>Хоолны цэс → худалдан авалтын жагсаалт</b><span>«Дэлгүүр» таб дээр 3 өдрийн цэс гаргаад, дутуу орцыг баталгаажуулж жагсаалтад нэмнэ.</span></div></li>
+      <li><span class="n">4</span><div><b>Зарлагыг AI-аар ангилах</b><span>«Төсөв» таб дээр «Эмийн сан 24500» гэж бичихэд ангилал, дүнг нь танина.</span></div></li>
+      <li><span class="n">5</span><div><b>Бяцхангийн вакцин</b><span>Нүүр хуудсан дээрх эрүүл мэндийн хуваарь. Сануулга хуанлид орсон байна.</span></div></li>
+    </ol>
+    <div class="facts">
+      <div class="fact"><strong>999₮</strong><small>сард, гэр бүл тутамд</small></div>
+      <div class="fact"><strong>11.7×</strong><small>Cozi Gold-оос хямд (≈11,687₮)</small></div>
+      <div class="fact"><strong>150</strong><small>AI хүсэлт сард</small></div>
+    </div>
+    <button class="reset" id="reset" type="button">Демог эхнээс нь эхлүүлэх</button>
+  </section>
+
+  <section class="phone" id="phone" aria-label="Тоби апп">
+    <header class="top">
+      <div class="wordmark">t<span id="mk2"></span>bi</div>
+      <button class="sub-pill" id="subpill" type="button"></button>
+    </header>
+    <main class="view" id="view"></main>
+    <div id="chatbar"></div>
+    <nav class="nav" id="nav" aria-label="Үндсэн цэс"></nav>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Math.round(n).toLocaleString("en-US") + "₮";
+const pad = n => String(n).padStart(2,"0");
+const iso = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const WD = ["Ня","Да","Мя","Лх","Пү","Ба","Бя"];
+const MON = ["1-р сар","2-р сар","3-р сар","4-р сар","5-р сар","6-р сар","7-р сар","8-р сар","9-р сар","10-р сар","11-р сар","12-р сар"];
+const dayLabel = s => { const d = new Date(s+"T00:00"); const diff = Math.round((d-TODAY)/864e5);
+  if(diff===0) return "Өнөөдөр"; if(diff===1) return "Маргааш";
+  return MON[d.getMonth()]+"ын "+d.getDate()+", "+WD[d.getDay()]; };
+
+const TOONO = (fill="var(--gold)", ink="var(--ink)") => `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="${fill}"/>${
+  [0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${24+9*Math.cos(r)}" y1="${24+9*Math.sin(r)}" x2="${24+20*Math.cos(r)}" y2="${24+20*Math.sin(r)}" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`}).join("")
+}<circle cx="24" cy="24" r="9" fill="none" stroke="${ink}" stroke-width="3"/><line x1="15" y1="24" x2="33" y2="24" stroke="${ink}" stroke-width="2"/><line x1="24" y1="15" x2="24" y2="33" stroke="${ink}" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="${ink}"/></svg>`;
+$("#mk1").innerHTML = TOONO(); $("#mk2").innerHTML = TOONO();
+
+const ICON = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  cart:'<path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/>',
+  wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
+  ai:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',
+  send:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+
+/* ---------- data ---------- */
+const MEMBERS = {
+  dad:{name:"Бат",role:"Аав",color:"var(--m-dad)"},
+  mom:{name:"Сараа",role:"Ээж",color:"var(--m-mom)"},
+  girl:{name:"Номин",role:"Охин · 12",color:"var(--m-girl)"},
+  boy:{name:"Тэмүүлэн",role:"Хүү · 9",color:"var(--m-boy)"},
+  baby:{name:"Анар",role:"Бяцхан · 2",color:"var(--m-baby)"},
+  all:{name:"Бүх гэр бүл",role:"",color:"var(--gold)"}
+};
+function seed(){
+  const d = n => iso(addDays(TODAY,n));
+  const m = iso(TODAY).slice(0,8);
+  return {
+    activeUntil:null, aiUsed:23, quota:150, tab:"home", selDay:d(0), invoiceNo:0,
+    events:[
+      {id:1,date:d(0),time:"18:30",title:"Сагсан бөмбөгийн бэлтгэл",who:"boy"},
+      {id:2,date:d(0),time:"19:30",title:"Гэр бүлийн оройн хоол",who:"all"},
+      {id:3,date:d(1),time:"10:00",title:"Анарын ээлжит вакцин · Өрхийн эмнэлэг",who:"baby"},
+      {id:4,date:d(1),time:"20:00",title:"СӨХ-ийн төлбөр төлөх",who:"dad"},
+      {id:5,date:d(2),time:"17:00",title:"Англи хэлний дугуйлан",who:"girl"},
+      {id:6,date:d(3),time:"12:30",title:"Шүдний эмчийн үзлэг",who:"mom"},
+      {id:7,date:d(5),time:"11:00",title:"Эмээгийнд зочлох",who:"all"}
+    ],
+    shop:[
+      {id:1,name:"Сүү 1л",qty:"2 ш",cat:"Сүү",done:false,by:"mom"},
+      {id:2,name:"Талх",qty:"1 ш",cat:"Талх",done:false,by:"dad"},
+      {id:3,name:"Өндөг",qty:"10 ш",cat:"Хүнс",done:true,by:"mom"},
+      {id:4,name:"Живх (4-р хэмжээ)",qty:"1 бооцоо",cat:"Хүүхэд",done:false,by:"mom"},
+      {id:5,name:"Алим",qty:"1 кг",cat:"Жимс",done:false,by:"girl"}
+    ],
+    tx:[
+      {id:1,date:m+"02",name:"Номин супермаркет",cat:"Хүнс",amt:84500,who:"mom"},
+      {id:2,date:m+"02",name:"Дугуйлангийн төлбөр",cat:"Боловсрол",amt:180000,who:"dad"},
+      {id:3,date:m+"01",name:"Цахилгааны төлбөр",cat:"Орон сууц",amt:68000,who:"dad"},
+      {id:4,date:m+"01",name:"E-Mart",cat:"Хүнс",amt:127900,who:"mom"},
+      {id:5,date:m+"01",name:"Шатахуун",cat:"Тээвэр",amt:86000,who:"dad"},
+      {id:6,date:m+"01",name:"СӨХ",cat:"Орон сууц",amt:77000,who:"dad"},
+      {id:7,date:m+"01",name:"Талх, сүү",cat:"Хүнс",amt:100000,who:"mom"},
+      {id:8,date:m+"01",name:"Хүүхдийн тоглоом",cat:"Бусад",amt:38000,who:"mom"}
+    ],
+    budget:1200000,
+    vaccines:[
+      {name:"Ээлжит вакцин (2 настай)",date:d(1),place:"Өрхийн эмнэлэг",done:false},
+      {name:"Хүүхдийн эмчийн үзлэг",date:d(30),place:"Өрхийн эмнэлэг",done:false},
+      {name:"Шүдний анхны үзлэг",date:d(60),place:"Хүүхдийн шүдний эмнэлэг",done:false}
+    ],
+    chat:[{r:"b",t:"Сайн байна уу! Би Тоби. Гэр бүлийн хуанли, төсөв, худалдан авалтын жагсаалтыг харж чадна. Юу туслах вэ?"}],
+    nextId:100
+  };
+}
+const KEY = "tobi-demo-v1";
+let S;
+try{ S = JSON.parse(localStorage.getItem(KEY)) || seed(); }catch(e){ S = seed(); }
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
+const nid = () => ++S.nextId;
+const isActive = () => S.activeUntil && new Date(S.activeUntil) > new Date();
+
+/* ---------- shell ---------- */
+const TABS = [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["budget","Төсөв","wallet"],["ai","Тоби","ai"]];
+function renderNav(){
+  $("#nav").innerHTML = TABS.map(([k,l,i]) => `<button type="button" data-tab="${k}" ${S.tab===k?'aria-current="page"':""}>${svg(i)}${l}</button>`).join("");
+}
+function renderPill(){
+  const p = $("#subpill");
+  if(isActive()){ const u = new Date(S.activeUntil);
+    p.className="sub-pill on"; p.innerHTML=`<span class="dot"></span>Идэвхтэй · ${pad(u.getMonth()+1)}/${pad(u.getDate())} хүртэл`;
+  } else { p.className="sub-pill off"; p.textContent="999₮ · Идэвхжүүлэх"; }
+}
+function render(){
+  renderNav(); renderPill();
+  const v = $("#view");
+  v.innerHTML = VIEWS[S.tab]();
+  $("#chatbar").innerHTML = S.tab==="ai" ? `<div class="chatbar"><p class="demo-flag">${LIVE?"Qwen · Alibaba Cloud Model Studio":"Демо горим · Qwen-ийн хариуг дуурайсан"}</p><form class="ask" id="chatform"><input id="chatin" placeholder="Тобигоос асуух…" autocomplete="off" aria-label="Тобигоос асуух"><button aria-label="Илгээх">${svg("send",'width="18" height="18"')}</button></form></div>` : "";
+  if(S.tab==="ai") v.scrollTop = v.scrollHeight;
+  save();
+}
+function toast(t){
+  const el = document.createElement("div"); el.className="toast"; el.textContent=t;
+  $("#phone").appendChild(el); setTimeout(()=>el.remove(),2200);
+}
+function sheet(html){
+  closeSheet();
+  const o = document.createElement("div"); o.className="overlay"; o.id="overlay";
+  o.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><button class="x" type="button" data-act="close" aria-label="Хаах">✕</button>${html}</div>`;
+  o.addEventListener("click", e => { if(e.target===o) closeSheet(); });
+  $("#phone").appendChild(o);
+  return o;
+}
+function closeSheet(){ const o=$("#overlay"); if(o) o.remove(); }
+
+/* ---------- views ---------- */
+const av = (k,sm) => `<span class="av${sm?" sm":""}" style="background:${MEMBERS[k].color}">${MEMBERS[k].name[0]}</span>`;
+const evRow = e => `<div class="ev"><time>${e.time}</time><div><div class="t">${esc(e.title)}</div><div class="w">${MEMBERS[e.who].name}</div></div><span class="bar" style="background:${MEMBERS[e.who].color}"></span></div>`;
+const spent = () => S.tx.reduce((a,t)=>a+t.amt,0);
+const byCat = () => { const m={}; S.tx.forEach(t=>m[t.cat]=(m[t.cat]||0)+t.amt); return Object.entries(m).sort((a,b)=>b[1]-a[1]); };
+
+const VIEWS = {
+  home(){
+    const today = S.events.filter(e=>e.date===iso(TODAY)).sort((a,b)=>a.time.localeCompare(b.time));
+    const open = S.shop.filter(i=>!i.done).length;
+    const sp = spent(), pct = Math.min(100, sp/S.budget*100);
+    const h = new Date().getHours(); const hi = h<12?"Өглөөний мэнд":h<18?"Өдрийн мэнд":"Оройн мэнд";
+    return `
+    <h2 class="vt">${hi}, Сараа</h2>
+    <p class="vsub">${dayLabel(iso(TODAY))} · ${MON[TODAY.getMonth()]}ын ${TODAY.getDate()}</p>
+    <div class="members">${["dad","mom","girl","boy","baby"].map(k=>`<div class="mem">${av(k)}<span>${MEMBERS[k].role.split(" ·")[0]}</span></div>`).join("")}</div>
+    ${isActive()?"":`<div class="sec pay-banner"><div><b>Захиалга идэвхгүй байна</b><p>Тоби AI-г ашиглахын тулд 999₮ төлж 30 хоног идэвхжүүлнэ үү.</p></div><button class="btn gold" type="button" data-act="pay">Төлөх</button></div>`}
+    <div class="sec"><form class="ask" id="homeask"><input id="homein" placeholder="Тобигоос асуух…" autocomplete="off" aria-label="Тобигоос асуух"><button aria-label="Асуух">${svg("send",'width="18" height="18"')}</button></form>
+      <div class="chips"><button class="chip" type="button" data-q="Энэ сар хоолонд хэдийг зарцуулсан бэ?">Хоолны зарлага?</button><button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш юу байна?</button></div></div>
+    <div class="sec"><div class="sec-h"><h3>Өнөөдөр</h3><button class="link" type="button" data-tab="cal">Хуанли</button></div>
+      <div class="card">${today.length?today.map(evRow).join(""):'<p class="vsub" style="margin:0">Өнөөдөр төлөвлөгөө алга.</p>'}</div></div>
+    <div class="sec"><div class="sec-h"><h3>Энэ сарын төсөв</h3><button class="link" type="button" data-tab="budget">Дэлгэрэнгүй</button></div>
+      <div class="card"><div class="big">${fmt(sp)}</div><div class="kv" style="margin:2px 0 10px"><span>зарцуулсан</span><span>төсөв ${fmt(S.budget)}</span></div><div class="meter"><i style="width:${pct}%"></i></div></div></div>
+    <div class="sec"><div class="sec-h"><h3>Худалдан авалт</h3><button class="link" type="button" data-tab="shop">${open} зүйл үлдсэн</button></div></div>
+    <div class="sec"><div class="sec-h"><h3>Анарын эрүүл мэнд</h3><span class="tag">0–5 ой</span></div>
+      <div class="card">${S.vaccines.map(x=>`<div class="vac"><div>${esc(x.name)}<br><small>${esc(x.place)}</small></div><small>${dayLabel(x.date)}</small></div>`).join("")}
+      <p class="vsub" style="margin:8px 0 0;font-size:12px">Жишээ хуваарь. Эмчийнхээ зөвлөгөөг баримтална уу.</p></div></div>`;
+  },
+  cal(){
+    const days = [...Array(7)].map((_,i)=>addDays(TODAY,i));
+    const list = S.events.filter(e=>e.date===S.selDay).sort((a,b)=>a.time.localeCompare(b.time));
+    return `<h2 class="vt">Хуанли</h2><p class="vsub">Гишүүн бүр өөрийн өнгөтэй</p>
+    <div class="week">${days.map(d=>{const s=iso(d);const evs=S.events.filter(e=>e.date===s);
+      return `<button type="button" class="day${s===S.selDay?" sel":""}" data-day="${s}"><span>${WD[d.getDay()]}</span><b>${d.getDate()}</b><span class="dots">${evs.slice(0,3).map(e=>`<i style="background:${MEMBERS[e.who].color}"></i>`).join("")}</span></button>`}).join("")}</div>
+    <div class="sec-h"><h3>${dayLabel(S.selDay)}</h3><button class="link" type="button" data-act="addev">+ Үйл явдал</button></div>
+    <div class="card">${list.length?list.map(evRow).join(""):'<p class="vsub" style="margin:0">Энэ өдөр төлөвлөгөө алга.</p>'}</div>`;
+  },
+  shop(){
+    const items = [...S.shop].sort((a,b)=>a.done-b.done);
+    return `<h2 class="vt">Худалдан авалт</h2><p class="vsub">Гэр бүлийн нэгдсэн жагсаалт</p>
+    <button class="btn gold block" type="button" data-act="meal">Тоби: 3 өдрийн хоолны цэс гаргах ${isActive()?"":'<span class="lock">· 999₮</span>'}</button>
+    <form class="addrow" id="shopform"><input id="shopin" placeholder="Жишээ: Будаа 2кг" aria-label="Шинэ зүйл"><button class="btn">Нэмэх</button></form>
+    <div>${items.map(i=>`<label class="item${i.done?" done":""}"><input type="checkbox" data-chk="${i.id}" ${i.done?"checked":""}><span class="nm">${esc(i.name)} <span class="qty">${esc(i.qty||"")}</span></span>${av(i.by,1)}</label>`).join("")}</div>`;
+  },
+  budget(){
+    const sp = spent(), cats = byCat(), max = cats.length?cats[0][1]:1;
+    return `<h2 class="vt">Төсөв</h2><p class="vsub">${MON[TODAY.getMonth()]} · ${fmt(S.budget-sp)} үлдсэн</p>
+    <div class="card"><div class="big">${fmt(sp)}</div><div class="kv" style="margin:2px 0 10px"><span>зарцуулсан</span><span>${Math.round(sp/S.budget*100)}%</span></div><div class="meter"><i style="width:${Math.min(100,sp/S.budget*100)}%"></i></div></div>
+    <div class="sec"><div class="sec-h"><h3>AI ангилал</h3>${isActive()?'<span class="tag">qwen3.8-flash</span>':'<span class="lock">999₮</span>'}</div>
+      <form class="addrow" id="txform" style="margin-top:0"><input id="txin" placeholder="Жишээ: Эмийн сан 24500" aria-label="Зарлага бичих"><button class="btn">Ангилах</button></form>
+      <div id="txres"></div></div>
+    <div class="sec"><div class="sec-h"><h3>Ангиллаар</h3></div><div class="cats">${cats.map(([c,a])=>`<div class="cat"><span>${c}</span><span>${fmt(a)}</span><div class="meter"><i style="width:${a/max*100}%"></i></div></div>`).join("")}</div></div>
+    <div class="sec"><div class="sec-h"><h3>Сүүлийн гүйлгээ</h3></div>${[...S.tx].sort((a,b)=>b.id-a.id).slice(0,8).map(t=>`<div class="tx"><span>${esc(t.name)}</span><span class="amt">−${fmt(t.amt)}</span><small>${t.cat} · ${MEMBERS[t.who].name}</small><small style="text-align:right">${t.date.slice(5).replace("-","/")}</small></div>`).join("")}</div>`;
+  },
+  ai(){
+    return `<h2 class="vt">Тоби</h2><p class="vsub">AI хүсэлт: ${S.aiUsed}/${S.quota} энэ сард</p>
+    <div class="chat" id="chat">${S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.t)}${m.meta?`<span class="meta">${esc(m.meta)}</span>`:""}${m.card?cardHTML(m):""}</div>`).join("")}</div>
+    <div class="chips"><button class="chip" type="button" data-q="Энэ сар хоолонд хэдийг зарцуулсан бэ?">Хоолны зарлага?</button><button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш?</button><button class="chip" type="button" data-q="Анарын вакцин хэзээ вэ?">Вакцин хэзээ?</button><button class="chip" type="button" data-q="Жагсаалтад банш, сүү нэм">Банш, сүү нэм</button></div>`;
+  }
+};
+function cardHTML(m){
+  const c = m.card;
+  if(c.state==="done") return `<div class="confirm">✓ ${c.items.length} зүйл жагсаалтад нэмэгдлээ</div>`;
+  if(c.state==="no") return `<div class="confirm">Цуцалсан</div>`;
+  return `<div class="confirm"><b>Жагсаалтад нэмэх үү?</b><br>${c.items.map(esc).join(", ")}<div class="row"><button class="btn gold" type="button" data-card="${m.id}" data-yes="1">Нэмэх</button><button class="btn ghost" type="button" data-card="${m.id}">Үгүй</button></div></div>`;
+}
+
+/* ---------- simulated Qwen (tool-calling logic mirrors README §5) ---------- */
+const MEAL = [
+  {day:"1-р өдөр",dish:"Цуйван",need:["Гурил 1кг","Үхрийн мах 500г","Лууван","Байцаа"]},
+  {day:"2-р өдөр",dish:"Хуушуур",need:["Хонины мах 800г","Сонгино"]},
+  {day:"3-р өдөр",dish:"Будаатай хуурга",need:["Будаа 1кг","Чинжүү"]}
+];
+function tobi(q){
+  const s = q.toLowerCase();
+  if(/цэс|юу хийх|хоол хий/.test(s)){
+    const items = MEAL.flatMap(m=>m.need);
+    return {t:"3 өдрийн цэс:\n"+MEAL.map(m=>`• ${m.day}: ${m.dish}`).join("\n")+"\nДутуу орцыг жагсаалтад нэмэх үү?", tool:"qwen3.7-plus", card:{items,state:"ask"}};
+  }
+  if(/хоол|хүнс|зарцуул|төсөв|мөнгө|зарлага/.test(s)){
+    const cats = byCat(); const food = (cats.find(c=>c[0]==="Хүнс")||[0,0])[1]; const sp = spent();
+    if(/хоол|хүнс/.test(s)) return {t:`Энэ сард хүнсэнд ${fmt(food)} зарцуулсан байна. Нийт зарлагын ${Math.round(food/sp*100)}% нь. Сарын төсвөөс ${fmt(S.budget-sp)} үлдсэн.`, tool:"get_budget_summary"};
+    return {t:`Энэ сарын зарлага ${fmt(sp)}. Хамгийн их нь: ${cats.slice(0,3).map(c=>c[0]+" "+fmt(c[1])).join(", ")}. Үлдэгдэл ${fmt(S.budget-sp)}.`, tool:"get_budget_summary"};
+  }
+  if(/вакцин|тариа|эмч|эрүүл/.test(s)){
+    const v = S.vaccines.find(x=>!x.done);
+    return {t:`Анарын дараагийн нь: ${v.name}. ${dayLabel(v.date)}, ${v.place}. Хуанлид 10:00 цагт сануулга тавьсан. Эмчийнхээ зааврыг баримтална уу.`, tool:"list_events"};
+  }
+  if(/маргааш|өнөөдөр|хуанли|юу байгаа|төлөвлөгөө/.test(s)){
+    const tgt = /маргааш/.test(s)?iso(addDays(TODAY,1)):iso(TODAY);
+    const ev = S.events.filter(e=>e.date===tgt).sort((a,b)=>a.time.localeCompare(b.time));
+    return {t: ev.length ? `${dayLabel(tgt)}:\n`+ev.map(e=>`• ${e.time} ${e.title} (${MEMBERS[e.who].name})`).join("\n") : `${dayLabel(tgt)} төлөвлөгөө алга.`, tool:"list_events"};
+  }
+  const add = s.match(/(?:жагсаалтад\s+)?(.+?)\s+нэм/);
+  if(add){
+    const items = add[1].replace(/жагсаалтад/,"").split(/,|\sба\s|\sболон\s/).map(x=>x.trim()).filter(Boolean).map(x=>x[0].toUpperCase()+x.slice(1));
+    return {t:`Дараах зүйлсийг жагсаалтад нэмэх гэж байна. Баталгаажуулна уу.`, tool:"add_shopping_items (хүлээгдэж буй)", card:{items,state:"ask"}};
+  }
+  if(/цэс|юу хийх|хоол хий/.test(s)){
+    const items = MEAL.flatMap(m=>m.need);
+    return {t:"3 өдрийн цэс:\n"+MEAL.map(m=>`• ${m.day}: ${m.dish}`).join("\n")+"\nДутуу орцыг жагсаалтад нэмэх үү?", tool:"qwen3.7-plus", card:{items,state:"ask"}};
+  }
+  return {t:"Би хуанли, төсөв, худалдан авалтын жагсаалт, Анарын эрүүл мэндийн хуваарийг харж чадна. Жишээ нь: «Маргааш юу байгаа вэ?», «Энэ сар хоолонд хэдийг зарцуулсан бэ?», «Жагсаалтад банш нэм».", tool:null};
+}
+let busy = false;
+function ask(q){
+  q = q.trim(); if(!q || busy) return;
+  if(!isActive()){ openPay("Тоби AI нь идэвхтэй захиалгатай гэр бүлд ажиллана."); return; }
+  if(S.aiUsed>=S.quota){ toast("Энэ сарын 150 хүсэлтийн хязгаар дууслаа"); return; }
+  S.tab="ai"; S.chat.push({r:"u",t:q}); render();
+  busy = true;
+  const chat = $("#chat"); const ty = document.createElement("div"); ty.className="typing"; ty.innerHTML="<i></i><i></i><i></i>"; chat.appendChild(ty);
+  $("#view").scrollTop = $("#view").scrollHeight;
+  const t0 = performance.now();
+  const finish = msg => { S.aiUsed++; S.chat.push(msg); busy=false; render(); };
+  const simulate = why => setTimeout(()=>{
+    const r = tobi(q);
+    const model = r.tool==="qwen3.7-plus" ? "qwen3.7-plus" : "qwen3.8-flash";
+    const tool = r.tool && r.tool!=="qwen3.7-plus" ? " · tool: "+r.tool : "";
+    const msg = {r:"b",t:r.t,meta:`${model}${tool} · ${((performance.now()-t0)/1000).toFixed(1)}с · демо${why?" ("+why+")":""}`};
+    if(r.card){ msg.id = nid(); msg.card = r.card; }
+    finish(msg);
+  }, 500 + Math.random()*400);
+  if(!LIVE){ simulate(); return; }
+  callQwen(q).then(r=>{
+    if(!r.ok){ simulate(r.reason==="rate_limited"?"хурдны хязгаар":r.reason==="daily_cap"?"өдрийн хязгаар":"Qwen холбогдсонгүй"); return; }
+    const msg = {r:"b",t:r.reply,meta:`${r.model}${r.tools&&r.tools.length?" · tool: "+r.tools.join(", "):""} · ${((performance.now()-t0)/1000).toFixed(1)}с`};
+    if(r.action && r.action.type==="add_shopping_items" && r.action.items.length){ msg.id = nid(); msg.card = {items:r.action.items.slice(0,15).map(String),state:"ask"}; }
+    finish(msg);
+  }).catch(()=>simulate("сүлжээ"));
+}
+
+/* ---------- live Qwen via /api/tobi (key stays on the server) ---------- */
+let LIVE = false;
+function context(){
+  const until = iso(addDays(TODAY,14));
+  return {
+    today: iso(TODAY),
+    members: Object.entries(MEMBERS).filter(([k])=>k!=="all").map(([k,m])=>({id:k,name:m.name,role:m.role})),
+    events: S.events.filter(e=>e.date>=iso(TODAY)&&e.date<=until).map(e=>({date:e.date,time:e.time,title:e.title,who:MEMBERS[e.who].name})),
+    shopping: S.shop.filter(i=>!i.done).map(i=>i.name+(i.qty?" "+i.qty:"")),
+    budget: {limit:S.budget, spent:spent(), by_category:Object.fromEntries(byCat())},
+    transactions: S.tx.slice(-20).map(t=>({date:t.date,name:t.name,category:t.cat,amount:t.amt})),
+    health: S.vaccines.map(v=>({member:"Анар (2 настай)",name:v.name,date:v.date,place:v.place}))
+  };
+}
+async function callQwen(q){
+  const history = S.chat.filter(m=>m.r==="u"||m.r==="b").slice(-8).map(m=>({role:m.r==="u"?"user":"assistant",content:String(m.t).slice(0,600)}));
+  const ctl = new AbortController(); const tm = setTimeout(()=>ctl.abort(), 20000);
+  try{
+    const res = await fetch("/api/tobi",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history,context:context()}),signal:ctl.signal});
+    const j = await res.json().catch(()=>({ok:false,reason:"error"}));
+    return j;
+  } finally { clearTimeout(tm); }
+}
+fetch("/api/tobi").then(r=>r.ok?r.json():{live:false}).then(j=>{ LIVE = !!j.live; render(); }).catch(()=>{});
+
+/* ---------- QPay sandbox (simulated) ---------- */
+function drawQR(cv, seedStr){
+  const N=25, px=6, ctx=cv.getContext("2d"); cv.width=cv.height=N*px;
+  let h=0; for(const c of seedStr) h=(h*31+c.charCodeAt(0))>>>0;
+  const rnd=()=>{h^=h<<13;h>>>=0;h^=h>>17;h^=h<<5;h>>>=0;return h/4294967296;};
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,cv.width,cv.height);ctx.fillStyle="#18202E";
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){ if(rnd()>.52) ctx.fillRect(x*px,y*px,px,px); }
+  [[0,0],[N-7,0],[0,N-7]].forEach(([x,y])=>{ctx.fillStyle="#fff";ctx.fillRect((x-1<0?0:x-1)*px,(y-1<0?0:y-1)*px,8*px,8*px);
+    ctx.fillStyle="#18202E";ctx.fillRect(x*px,y*px,7*px,7*px);ctx.fillStyle="#fff";ctx.fillRect((x+1)*px,(y+1)*px,5*px,5*px);ctx.fillStyle="#18202E";ctx.fillRect((x+2)*px,(y+2)*px,3*px,3*px);});
+}
+function openPay(reason){
+  if(isActive()){ openSub(); return; }
+  S.invoiceNo++; const inv = "TOBI-"+iso(TODAY).replace(/-/g,"")+"-"+String(1000+S.invoiceNo);
+  const o = sheet(`<h3>Тоби · 30 хоног</h3><p class="vsub">${esc(reason||"Гэр бүлийн бүх модуль, Тоби AI сард 150 хүсэлт.")}</p>
+    <div class="card" style="display:flex;justify-content:space-between;align-items:baseline"><span>Нийт төлөх</span><span class="big">999₮</span></div>
+    <p class="vsub" style="font-size:12px;margin:6px 0 0">НӨАТ орсон. Урьдчилсан төлбөр, автоматаар сунгагдахгүй.</p>
+    <div class="qr"><canvas id="qr" width="150" height="150" aria-label="QPay QR код (sandbox)"></canvas><span class="eyebrow">QPay sandbox · ${inv}</span></div>
+    <div class="banks">${["Хаан","Голомт","ХХБ","Хас","Төрийн","Капитрон","М банк","Ард"].map(b=>`<div class="bank">${b}</div>`).join("")}</div>
+    <button class="btn gold block" type="button" id="simpay">Sandbox: төлбөр төлөгдсөнийг дуурайх</button>
+    <div class="log" id="plog"></div>`);
+  drawQR(o.querySelector("#qr"), inv);
+  const log = o.querySelector("#plog");
+  const line = (t,ok) => { log.innerHTML += (log.innerHTML?"\n":"") + (ok?`<span class="ok">${esc(t)}</span>`:esc(t)); };
+  line("POST /v2/auth/token → 200");
+  line(`POST /v2/invoice  amount=999  sender_invoice_no=${inv} → 200`);
+  line("invoice_id: sbx_"+Math.random().toString(36).slice(2,10)+"  status: PENDING");
+  o.querySelector("#simpay").addEventListener("click", e=>{
+    e.target.disabled = true; e.target.textContent = "Банкнаас хариу хүлээж байна…";
+    setTimeout(()=>line("← callback /api/qpay/callback?inv="+inv),600);
+    setTimeout(()=>line("POST /v2/payment/check → paid_amount=999"),1200);
+    setTimeout(()=>{
+      const until = addDays(new Date(),30); S.activeUntil = until.toISOString();
+      line(`✓ PAID · subscription.active_until = ${iso(until)}`, true);
+      e.target.textContent = "Төлбөр баталгаажлаа";
+      render();
+      setTimeout(()=>{ closeSheet(); toast("Тоби 30 хоног идэвхжлээ"); }, 1100);
+    },1900);
+  });
+}
+function openSub(){
+  const u = new Date(S.activeUntil);
+  sheet(`<h3>Захиалга</h3><p class="vsub">Идэвхтэй · ${iso(u)} хүртэл</p>
+    <div class="card"><div class="kv" style="margin:0 0 8px"><span>AI хүсэлт</span><span>${S.aiUsed}/${S.quota}</span></div><div class="meter"><i style="width:${S.aiUsed/S.quota*100}%"></i></div></div>
+    <div class="sec"><h3 style="font-size:15px;font-family:var(--f-body)">Сарын үнийн харьцуулалт</h3>
+    <table class="cmp"><tr class="us"><td>Тоби</td><td>999₮</td></tr><tr><td>Cozi Gold ($39/жил)</td><td>≈11,687₮</td></tr><tr><td>FamilyWall Premium ($7.99)</td><td>≈28,732₮</td></tr><tr><td>Maple Plus ($9.99)</td><td>≈35,924₮</td></tr></table>
+    <p class="vsub" style="font-size:12px;margin-top:6px">1$ ≈ 3,596₮. App Store үнэ.</p></div>
+    <button class="btn ghost block" type="button" data-act="close">Хаах</button>`);
+}
+
+/* ---------- other sheets ---------- */
+function openMeal(){
+  if(!isActive()){ openPay("Хоолны цэс гаргах нь Тоби AI-ийн функц."); return; }
+  if(S.aiUsed>=S.quota){ toast("AI хязгаар дууслаа"); return; }
+  const o = sheet(`<h3>3 өдрийн хоолны цэс</h3><p class="vsub">qwen3.7-plus · 5 хүнтэй гэр бүл · демо</p><div class="typing" style="margin:20px 0"><i></i><i></i><i></i></div>`);
+  setTimeout(()=>{
+    S.aiUsed++; save();
+    const have = S.shop.map(i=>i.name.toLowerCase());
+    const need = MEAL.flatMap(m=>m.need).filter(n=>!have.some(h=>h.startsWith(n.toLowerCase().split(" ")[0])));
+    o.querySelector(".sheet").innerHTML = `<button class="x" type="button" data-act="close" aria-label="Хаах">✕</button><h3>3 өдрийн хоолны цэс</h3><p class="vsub">qwen3.7-plus · 5 хүнтэй гэр бүл · демо</p>
+      ${MEAL.map(m=>`<div class="vac"><div><b>${m.dish}</b><br><small>${m.need.join(", ")}</small></div><small>${m.day}</small></div>`).join("")}
+      <div class="sec"><h3 style="font-size:15px;font-family:var(--f-body)">Жагсаалтад дутуу ${need.length} зүйл</h3><div class="chips">${need.map(n=>`<span class="chip">${esc(n)}</span>`).join("")}</div></div>
+      <div class="sec" style="display:flex;gap:8px"><button class="btn gold" style="flex:1" type="button" id="mealadd">Жагсаалтад нэмэх</button><button class="btn ghost" type="button" data-act="close">Болих</button></div>`;
+    o.querySelector("#mealadd").addEventListener("click",()=>{ addItems(need); closeSheet(); render(); toast(need.length+" зүйл нэмэгдлээ"); });
+  }, 1100);
+}
+function addItems(names){
+  names.forEach(n=>{ const m = n.match(/^(.*?)\s*(\d+\s*(?:кг|г|л|ш))?$/i);
+    S.shop.push({id:nid(),name:(m&&m[1])||n,qty:(m&&m[2])||"",cat:"Хүнс",done:false,by:"mom"}); });
+}
+function openAddEvent(){
+  const o = sheet(`<h3>Шинэ үйл явдал</h3>
+    <form id="evform"><label class="field">Нэр<input id="evt" required placeholder="Жишээ: Хөл бөмбөгийн тэмцээн"></label>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label class="field">Өдөр<input id="evd" type="date" value="${S.selDay}" required></label><label class="field">Цаг<input id="evh" type="time" value="18:00" required></label></div>
+    <label class="field">Хэнд<select id="evw">${Object.entries(MEMBERS).map(([k,m])=>`<option value="${k}">${m.name}${m.role?" ("+m.role+")":""}</option>`).join("")}</select></label>
+    <button class="btn gold block" style="margin-top:14px">Хадгалах</button></form>`);
+  o.querySelector("#evform").addEventListener("submit",e=>{ e.preventDefault();
+    S.events.push({id:nid(),title:o.querySelector("#evt").value.trim(),date:o.querySelector("#evd").value,time:o.querySelector("#evh").value,who:o.querySelector("#evw").value});
+    S.selDay = o.querySelector("#evd").value; closeSheet(); render(); toast("Хуанлид нэмэгдлээ"); });
+}
+const RULES = [["Хүнс",/номин|супермаркет|e-?mart|хүнс|талх|сүү|мах|дэлгүүр|гурил/],["Тээвэр",/такси|бензин|шатахуун|автобус|тээвэр|ubcab|машин/],["Эрүүл мэнд",/эм(ийн)? сан|эмнэлэг|эмч|вакцин|шүд/],["Боловсрол",/сургууль|дугуйлан|ном|сургалт|цэцэрлэг/],["Орон сууц",/цахилгаан|сөх|түрээс|ус|дулаан|интернэт/],["Хүүхэд",/живх|тоглоом|хүүхд/]];
+function classify(text){
+  const s = text.toLowerCase(); const num = s.replace(/[,\s](?=\d{3}\b)/g,"").match(/(\d+(?:\.\d+)?)\s*(мянга|к|k)?/);
+  let amt = num ? parseFloat(num[1])*(num[2]?1000:1) : 0;
+  const name = text.replace(/[\d.,]+\s*(мянга|к|k|₮)?/gi,"").trim() || "Зарлага";
+  const hit = RULES.find(([,re])=>re.test(s));
+  return {name:name[0].toUpperCase()+name.slice(1), amt, cat:hit?hit[0]:"Бусад", conf:hit?0.9+Math.random()*0.08:0.55};
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", e=>{
+  const t = e.target.closest("[data-tab],[data-act],[data-q],[data-day],[data-card]");
+  if(!t) return;
+  if(t.dataset.tab){ S.tab=t.dataset.tab; render(); $("#view").scrollTop = S.tab==="ai"?1e6:0; return; }
+  if(t.dataset.day){ S.selDay=t.dataset.day; render(); return; }
+  if(t.dataset.q){ ask(t.dataset.q); return; }
+  if(t.dataset.card){ const m = S.chat.find(x=>x.id==t.dataset.card);
+    if(m && m.card.state==="ask"){ if(t.dataset.yes){ addItems(m.card.items); m.card.state="done"; S.chat.push({r:"b",t:"Нэмлээ. Дэлгүүр орохдоо «Дэлгүүр» табаас хараарай.",meta:"tool: add_shopping_items → ok"}); } else m.card.state="no"; render(); }
+    return; }
+  const a = t.dataset.act;
+  if(a==="pay") openPay(); else if(a==="close") closeSheet(); else if(a==="meal") openMeal(); else if(a==="addev") openAddEvent();
+});
+$("#subpill").addEventListener("click",()=> isActive()?openSub():openPay());
+$("#reset").addEventListener("click",()=>{ S = seed(); closeSheet(); render(); toast("Демо эхнээсээ эхэллээ"); });
+document.addEventListener("submit", e=>{
+  const f = e.target; if(f.closest(".sheet")) return;
+  e.preventDefault();
+  if(f.id==="homeask"){ ask($("#homein").value); }
+  else if(f.id==="chatform"){ ask($("#chatin").value); }
+  else if(f.id==="shopform"){ const v=$("#shopin").value.trim(); if(v){ addItems([v]); render(); $("#shopin").focus(); } }
+  else if(f.id==="txform"){
+    const v=$("#txin").value.trim(); if(!v) return;
+    if(!isActive()){ openPay("Зарлагыг AI-аар ангилах нь Тоби AI-ийн функц."); return; }
+    const r = classify(v); S.aiUsed++; save();
+    if(!r.amt){ $("#txres").innerHTML='<p class="vsub">Дүнг олсонгүй. Жишээ: «Такси 12000».</p>'; return; }
+    $("#txres").innerHTML = `<div class="card"><div class="tx" style="border:none;padding:0"><span>${esc(r.name)}</span><span class="amt">−${fmt(r.amt)}</span><small>Ангилал: <b>${r.cat}</b> · итгэл ${Math.round(r.conf*100)}%</small><small style="text-align:right">демо</small></div>
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn gold" style="flex:1" type="button" id="txsave">Хадгалах</button><button class="btn ghost" type="button" id="txno">Болих</button></div></div>`;
+    $("#txsave").onclick = ()=>{ S.tx.push({id:nid(),date:iso(new Date()),name:r.name,cat:r.cat,amt:r.amt,who:"mom"}); render(); toast("Гүйлгээ хадгалагдлаа"); };
+    $("#txno").onclick = ()=>{ $("#txres").innerHTML=""; };
+  }
+});
+document.addEventListener("change", e=>{
+  const id = e.target.dataset && e.target.dataset.chk; if(!id) return;
+  const it = S.shop.find(i=>i.id==id); if(it){ it.done=e.target.checked; render(); }
+});
+render();
+})();
+</script>
+</body></html>
