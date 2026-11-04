@@ -29,12 +29,16 @@ const TOOLS = [
   { type: "function", function: { name: "list_events", description: "Гэр бүлийн хуанлийн үйл явдлууд (өнөөдрөөс 14 хоног)", parameters: { type: "object", properties: { date: { type: "string", description: "YYYY-MM-DD, тодорхой өдөр шүүх бол" } } } } },
   { type: "function", function: { name: "get_shopping_list", description: "Худалдан авалтын жагсаалтын авах ёстой зүйлс", parameters: { type: "object", properties: {} } } },
   { type: "function", function: { name: "get_health_schedule", description: "Бяцхан хүүхдийн вакцин, эмчийн үзлэгийн хуваарь", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "get_chores", description: "Хүүхдүүдийн гэрийн ажил, цуглуулсан оноо, урамшууллын зорилго", parameters: { type: "object", properties: {} } } },
   { type: "function", function: { name: "add_shopping_items", description: "Худалдан авалтын жагсаалтад зүйл нэмэх санал (хэрэглэгч баталгаажуулна)", parameters: { type: "object", properties: { items: { type: "array", items: { type: "string" }, description: "Жишээ: ['Сүү 1л', 'Талх']" } }, required: ["items"] } } }
 ];
 
 function runTool(name, args, ctx) {
   switch (name) {
-    case "get_budget_summary": return { today: ctx.today, budget: ctx.budget, transactions: ctx.transactions };
+    case "get_budget_summary":
+      if (ctx.viewer.child) return { error: "Төсвийн мэдээлэл зөвхөн эцэг эхэд харагдана." };
+      return { today: ctx.today, budget: ctx.budget, transactions: ctx.transactions };
+    case "get_chores": return { chores: ctx.chores, points: ctx.points };
     case "list_events": return { today: ctx.today, events: (ctx.events || []).filter(e => !args.date || e.date === args.date) };
     case "get_shopping_list": return { items: ctx.shopping };
     case "get_health_schedule": return { today: ctx.today, schedule: ctx.health };
@@ -48,12 +52,16 @@ function clip(v, n) { return String(v == null ? "" : v).slice(0, n); }
 function cleanContext(c) {
   c = c && typeof c === "object" ? c : {};
   const arr = (a, n) => (Array.isArray(a) ? a.slice(0, n) : []);
+  const v = c.viewer && typeof c.viewer === "object" ? c.viewer : {};
   return {
+    viewer: { name: clip(v.name, 30), role: clip(v.role, 30), child: v.child !== false },
+    chores: arr(c.chores, 40).map(x => ({ who: clip(x.who, 30), title: clip(x.title, 80), points: Number(x.points) || 0, done: !!x.done })),
+    points: Object.fromEntries(Object.entries((c.points && typeof c.points === "object") ? c.points : {}).slice(0, 6).map(([k, p]) => [clip(k, 30), { points: Number(p && p.points) || 0, goal: Number(p && p.goal) || 0, reward: clip(p && p.reward, 60) }])),
     today: clip(c.today, 10),
     members: arr(c.members, 8).map(m => ({ name: clip(m.name, 30), role: clip(m.role, 30) })),
     events: arr(c.events, 40).map(e => ({ date: clip(e.date, 10), time: clip(e.time, 5), title: clip(e.title, 80), who: clip(e.who, 30) })),
     shopping: arr(c.shopping, 50).map(s => clip(s, 60)),
-    budget: { limit: Number(c.budget && c.budget.limit) || 0, spent: Number(c.budget && c.budget.spent) || 0, by_category: Object.fromEntries(Object.entries((c.budget && c.budget.by_category) || {}).slice(0, 12).map(([k, v]) => [clip(k, 30), Number(v) || 0])) },
+    budget: !c.budget ? null : { limit: Number(c.budget && c.budget.limit) || 0, spent: Number(c.budget && c.budget.spent) || 0, by_category: Object.fromEntries(Object.entries((c.budget && c.budget.by_category) || {}).slice(0, 12).map(([k, v]) => [clip(k, 30), Number(v) || 0])) },
     transactions: arr(c.transactions, 20).map(t => ({ date: clip(t.date, 10), name: clip(t.name, 60), category: clip(t.category, 30), amount: Number(t.amount) || 0 })),
     health: arr(c.health, 10).map(h => ({ member: clip(h.member, 40), name: clip(h.name, 80), date: clip(h.date, 10), place: clip(h.place, 60) }))
   };
@@ -105,7 +113,10 @@ module.exports = async (req, res) => {
     .map(m => ({ role: m.role, content: clip(m.content, 600) }));
   if (!history.length || history[history.length - 1].role !== "user") return res.status(400).json({ ok: false, reason: "bad_request" });
 
-  const messages = [{ role: "system", content: SYSTEM + `\nӨнөөдөр: ${ctx.today}. Гэр бүл: ${ctx.members.map(m => m.name + " (" + m.role + ")").join(", ")}.` }, ...history];
+  const viewerLine = ctx.viewer.child
+    ? `Одоо ${ctx.viewer.name} (${ctx.viewer.role}) — хүүхэд ярьж байна. Энгийн, урамтай үгээр хариул. Төсөв, мөнгөний мэдээлэл бүү өг.`
+    : `Одоо ${ctx.viewer.name} (${ctx.viewer.role}) — эцэг эх ярьж байна.`;
+  const messages = [{ role: "system", content: SYSTEM + `\nӨнөөдөр: ${ctx.today}. Гэр бүл: ${ctx.members.map(m => m.name + " (" + m.role + ")").join(", ")}.\n${viewerLine}` }, ...history];
   const used = [];
   let action = null;
 

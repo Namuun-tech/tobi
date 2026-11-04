@@ -62,6 +62,17 @@ button{cursor:pointer}
 .sub-pill.off{background:var(--gold);color:var(--on-gold)}
 .sub-pill.on{background:var(--surface-2);color:var(--grass)}
 .sub-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.top-r{display:flex;align-items:center;gap:8px}
+.me-btn{border:none;background:none;padding:0;border-radius:50%;display:flex}
+.me-btn .av{width:34px;height:34px;font-size:13px;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--line)}
+.mem.me .av{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--fg)}
+.mem.me span:last-child{color:var(--fg);font-weight:600}
+.who-list{display:grid;gap:8px;margin-top:12px}
+.who{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 12px;text-align:left;width:100%}
+.who[aria-pressed="true"]{border-color:var(--fg);background:var(--surface-2)}
+.who small{display:block;color:var(--muted);font-size:12px}
+.pts{display:flex;align-items:baseline;gap:6px}
+.pts .big{font-size:30px}
 .view{flex:1;overflow-y:auto;padding:4px 18px 20px;min-height:0}
 .nav{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--surface);padding:6px 4px 8px}
 .nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);padding:6px 0;border-radius:10px}
@@ -191,6 +202,7 @@ h2.vt{font:700 20px/1.25 var(--f-head);letter-spacing:-.01em;margin:6px 0 4px}
       <li><span class="n">3</span><div><b>Хоолны цэс → худалдан авалтын жагсаалт</b><span>«Дэлгүүр» таб дээр 3 өдрийн цэс гаргаад, дутуу орцыг баталгаажуулж жагсаалтад нэмнэ.</span></div></li>
       <li><span class="n">4</span><div><b>Зарлагыг AI-аар ангилах</b><span>«Төсөв» таб дээр «Эмийн сан 24500» гэж бичихэд ангилал, дүнг нь танина.</span></div></li>
       <li><span class="n">5</span><div><b>Бяцхангийн вакцин</b><span>Нүүр хуудсан дээрх эрүүл мэндийн хуваарь. Сануулга хуанлид орсон байна.</span></div></li>
+      <li><span class="n">6</span><div><b>Гишүүн солих: Номин (12)</b><span>Баруун дээд буланд байрлах дугуй зураг дээр дарж Номиныг сонго. Төсөв нуугдаж, гэрийн ажил, оноо, урамшуулал гарч ирнэ. Ажлаа чагтлахад оноо нэмэгдэнэ.</span></div></li>
     </ol>
     <div class="facts">
       <div class="fact"><strong>999₮</strong><small>сард, гэр бүл тутамд</small></div>
@@ -203,7 +215,7 @@ h2.vt{font:700 20px/1.25 var(--f-head);letter-spacing:-.01em;margin:6px 0 4px}
   <section class="phone" id="phone" aria-label="Тоби апп">
     <header class="top">
       <div class="wordmark">t<span id="mk2"></span>bi</div>
-      <button class="sub-pill" id="subpill" type="button"></button>
+      <div class="top-r"><button class="sub-pill" id="subpill" type="button"></button><button class="me-btn" id="mebtn" type="button" aria-label="Гишүүн солих"></button></div>
     </header>
     <main class="view" id="view"></main>
     <div id="chatbar"></div>
@@ -239,7 +251,8 @@ const ICON = {
   cart:'<path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/>',
   wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
   ai:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',
-  send:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+  send:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
 };
 const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
 
@@ -256,7 +269,17 @@ function seed(){
   const d = n => iso(addDays(TODAY,n));
   const m = iso(TODAY).slice(0,8);
   return {
-    activeUntil:null, aiUsed:23, quota:150, tab:"home", selDay:d(0), invoiceNo:0,
+    activeUntil:null, aiUsed:23, quota:150, tab:"home", selDay:d(0), invoiceNo:0, me:"mom",
+    chores:[
+      {id:11,title:"Аяга таваг угаах",who:"girl",pts:10,done:false},
+      {id:12,title:"Англи хэлний даалгавар",who:"girl",pts:15,done:true},
+      {id:13,title:"Анартай 30 минут тоглох",who:"girl",pts:10,done:false},
+      {id:14,title:"Хогоо гаргах",who:"boy",pts:10,done:false},
+      {id:15,title:"Орноо засах",who:"boy",pts:5,done:true},
+      {id:16,title:"20 минут ном унших",who:"boy",pts:10,done:false}
+    ],
+    points:{girl:120,boy:85},
+    rewards:{girl:{pts:150,title:"Амралтын өдөр кино үзэх"},boy:{pts:100,title:"Шинэ лего"}},
     events:[
       {id:1,date:d(0),time:"18:30",title:"Сагсан бөмбөгийн бэлтгэл",who:"boy"},
       {id:2,date:d(0),time:"19:30",title:"Гэр бүлийн оройн хоол",who:"all"},
@@ -293,7 +316,7 @@ function seed(){
     nextId:100
   };
 }
-const KEY = "tobi-demo-v1";
+const KEY = "tobi-demo-v2";
 let S;
 try{ S = JSON.parse(localStorage.getItem(KEY)) || seed(); }catch(e){ S = seed(); }
 const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
@@ -301,17 +324,26 @@ const nid = () => ++S.nextId;
 const isActive = () => S.activeUntil && new Date(S.activeUntil) > new Date();
 
 /* ---------- shell ---------- */
-const TABS = [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["budget","Төсөв","wallet"],["ai","Тоби","ai"]];
+const KIDS = ["girl","boy"];
+const isKid = () => KIDS.includes(S.me);
+const me = () => MEMBERS[S.me];
+const tabs = () => isKid()
+  ? [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["chores","Ажил","star"],["ai","Тоби","ai"]]
+  : [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["budget","Төсөв","wallet"],["ai","Тоби","ai"]];
 function renderNav(){
-  $("#nav").innerHTML = TABS.map(([k,l,i]) => `<button type="button" data-tab="${k}" ${S.tab===k?'aria-current="page"':""}>${svg(i)}${l}</button>`).join("");
+  $("#nav").innerHTML = tabs().map(([k,l,i]) => `<button type="button" data-tab="${k}" ${S.tab===k?'aria-current="page"':""}>${svg(i)}${l}</button>`).join("");
 }
 function renderPill(){
   const p = $("#subpill");
   if(isActive()){ const u = new Date(S.activeUntil);
     p.className="sub-pill on"; p.innerHTML=`<span class="dot"></span>Идэвхтэй · ${pad(u.getMonth()+1)}/${pad(u.getDate())} хүртэл`;
-  } else { p.className="sub-pill off"; p.textContent="999₮ · Идэвхжүүлэх"; }
+  } else if(isKid()){ p.className="sub-pill on"; p.style.color="var(--muted)"; p.textContent="Захиалга идэвхгүй"; return; }
+  else { p.className="sub-pill off"; p.textContent="999₮ · Идэвхжүүлэх"; }
+  p.style.color="";
 }
 function render(){
+  if(isKid() && S.tab==="budget") S.tab="chores";
+  $("#mebtn").innerHTML = av(S.me);
   renderNav(); renderPill();
   const v = $("#view");
   v.innerHTML = VIEWS[S.tab]();
@@ -346,16 +378,19 @@ const VIEWS = {
     const sp = spent(), pct = Math.min(100, sp/S.budget*100);
     const h = new Date().getHours(); const hi = h<12?"Өглөөний мэнд":h<18?"Өдрийн мэнд":"Оройн мэнд";
     return `
-    <h2 class="vt">${hi}, Сараа</h2>
+    <h2 class="vt">${hi}, ${me().name}</h2>
     <p class="vsub">${dayLabel(iso(TODAY))} · ${MON[TODAY.getMonth()]}ын ${TODAY.getDate()}</p>
-    <div class="members">${["dad","mom","girl","boy","baby"].map(k=>`<div class="mem">${av(k)}<span>${MEMBERS[k].role.split(" ·")[0]}</span></div>`).join("")}</div>
-    ${isActive()?"":`<div class="sec pay-banner"><div><b>Захиалга идэвхгүй байна</b><p>Тоби AI-г ашиглахын тулд 999₮ төлж 30 хоног идэвхжүүлнэ үү.</p></div><button class="btn gold" type="button" data-act="pay">Төлөх</button></div>`}
+    <div class="members">${["dad","mom","girl","boy","baby"].map(k=>`<div class="mem${k===S.me?" me":""}">${av(k)}<span>${MEMBERS[k].role.split(" ·")[0]}</span></div>`).join("")}</div>
+    ${isActive()?"":isKid()?`<div class="sec pay-banner"><div><b>Тоби AI унтраастай байна</b><p>Аав, ээж чинь захиалгаа идэвхжүүлэхэд Тоби AI ажиллана.</p></div></div>`:`<div class="sec pay-banner"><div><b>Захиалга идэвхгүй байна</b><p>Тоби AI-г ашиглахын тулд 999₮ төлж 30 хоног идэвхжүүлнэ үү.</p></div><button class="btn gold" type="button" data-act="pay">Төлөх</button></div>`}
+    ${isKid()?kidChoresCard():""}
     <div class="sec"><form class="ask" id="homeask"><input id="homein" placeholder="Тобигоос асуух…" autocomplete="off" aria-label="Тобигоос асуух"><button aria-label="Асуух">${svg("send",'width="18" height="18"')}</button></form>
-      <div class="chips"><button class="chip" type="button" data-q="Энэ сар хоолонд хэдийг зарцуулсан бэ?">Хоолны зарлага?</button><button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш юу байна?</button></div></div>
+      <div class="chips">${firstChip()}<button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш юу байна?</button></div></div>
     <div class="sec"><div class="sec-h"><h3>Өнөөдөр</h3><button class="link" type="button" data-tab="cal">Хуанли</button></div>
       <div class="card">${today.length?today.map(evRow).join(""):'<p class="vsub" style="margin:0">Өнөөдөр төлөвлөгөө алга.</p>'}</div></div>
-    <div class="sec"><div class="sec-h"><h3>Энэ сарын төсөв</h3><button class="link" type="button" data-tab="budget">Дэлгэрэнгүй</button></div>
+    ${isKid()?"":`<div class="sec"><div class="sec-h"><h3>Энэ сарын төсөв</h3><button class="link" type="button" data-tab="budget">Дэлгэрэнгүй</button></div>
       <div class="card"><div class="big">${fmt(sp)}</div><div class="kv" style="margin:2px 0 10px"><span>зарцуулсан</span><span>төсөв ${fmt(S.budget)}</span></div><div class="meter"><i style="width:${pct}%"></i></div></div></div>
+    <div class="sec"><div class="sec-h"><h3>Хүүхдүүдийн ажил</h3><button class="link" type="button" data-tab="chores">Ажил оноох</button></div>
+      <div class="card">${KIDS.map(k=>{const c=S.chores.filter(x=>x.who===k);const dn=c.filter(x=>x.done).length;return `<div class="ev" style="grid-template-columns:auto minmax(0,1fr) auto">${av(k,1)}<div><div class="t">${MEMBERS[k].name}</div><div class="w">Өнөөдөр ${dn}/${c.length} ажил</div></div><span class="tag">${S.points[k]} оноо</span></div>`}).join("")}</div></div>`}
     <div class="sec"><div class="sec-h"><h3>Худалдан авалт</h3><button class="link" type="button" data-tab="shop">${open} зүйл үлдсэн</button></div></div>
     <div class="sec"><div class="sec-h"><h3>Анарын эрүүл мэнд</h3><span class="tag">0–5 ой</span></div>
       <div class="card">${S.vaccines.map(x=>`<div class="vac"><div>${esc(x.name)}<br><small>${esc(x.place)}</small></div><small>${dayLabel(x.date)}</small></div>`).join("")}
@@ -387,12 +422,56 @@ const VIEWS = {
     <div class="sec"><div class="sec-h"><h3>Ангиллаар</h3></div><div class="cats">${cats.map(([c,a])=>`<div class="cat"><span>${c}</span><span>${fmt(a)}</span><div class="meter"><i style="width:${a/max*100}%"></i></div></div>`).join("")}</div></div>
     <div class="sec"><div class="sec-h"><h3>Сүүлийн гүйлгээ</h3></div>${[...S.tx].sort((a,b)=>b.id-a.id).slice(0,8).map(t=>`<div class="tx"><span>${esc(t.name)}</span><span class="amt">−${fmt(t.amt)}</span><small>${t.cat} · ${MEMBERS[t.who].name}</small><small style="text-align:right">${t.date.slice(5).replace("-","/")}</small></div>`).join("")}</div>`;
   },
+  chores(){
+    if(isKid()){
+      const k=S.me, rw=S.rewards[k], p=S.points[k];
+      return `<h2 class="vt">Миний ажил</h2><p class="vsub">Ажил хийгээд оноо цуглуулаарай</p>
+      ${pointsCard(k)}
+      <div class="sec"><div class="sec-h"><h3>Өнөөдөр</h3></div>${choreList(k)}</div>
+      <p class="vsub" style="margin-top:14px;font-size:12.5px">Шинэ ажлыг аав, ээж чинь нэмнэ.</p>`;
+    }
+    return `<h2 class="vt">Гэрийн ажил</h2><p class="vsub">Хүүхдүүдэд ажил оноож, урамшуулал тохируулна</p>
+    <form class="card" id="choreform" style="display:grid;gap:8px">
+      <input id="chorein" placeholder="Жишээ: Цэцэг услах" aria-label="Ажлын нэр" required style="border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;min-width:0">
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px">
+        <select id="chorewho" aria-label="Хэнд" style="border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;min-width:0">${KIDS.map(k=>`<option value="${k}">${MEMBERS[k].name}</option>`).join("")}</select>
+        <select id="chorepts" aria-label="Оноо" style="border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;min-width:0">${[5,10,15,20].map(n=>`<option value="${n}" ${n===10?"selected":""}>${n} оноо</option>`).join("")}</select>
+        <button class="btn">Нэмэх</button>
+      </div>
+    </form>
+    ${KIDS.map(k=>`<div class="sec"><div class="sec-h"><h3 style="display:flex;align-items:center;gap:8px">${av(k,1)}${MEMBERS[k].name}</h3><span class="tag">${S.points[k]} / ${S.rewards[k].pts} оноо</span></div>${choreList(k)}<p class="vsub" style="font-size:12.5px;margin:6px 0 0">Урамшуулал: ${esc(S.rewards[k].title)}</p></div>`).join("")}`;
+  },
   ai(){
     return `<h2 class="vt">Тоби</h2><p class="vsub">AI хүсэлт: ${S.aiUsed}/${S.quota} энэ сард</p>
     <div class="chat" id="chat">${S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.t)}${m.meta?`<span class="meta">${esc(m.meta)}</span>`:""}${m.card?cardHTML(m):""}</div>`).join("")}</div>
-    <div class="chips"><button class="chip" type="button" data-q="Энэ сар хоолонд хэдийг зарцуулсан бэ?">Хоолны зарлага?</button><button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш?</button><button class="chip" type="button" data-q="Анарын вакцин хэзээ вэ?">Вакцин хэзээ?</button><button class="chip" type="button" data-q="Жагсаалтад банш, сүү нэм">Банш, сүү нэм</button></div>`;
+    <div class="chips">${firstChip()}<button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш?</button><button class="chip" type="button" data-q="Анарын вакцин хэзээ вэ?">Вакцин хэзээ?</button><button class="chip" type="button" data-q="Жагсаалтад банш, сүү нэм">Банш, сүү нэм</button></div>`;
   }
 };
+function firstChip(){
+  return isKid()
+    ? '<button class="chip" type="button" data-q="Миний оноо хэд болсон бэ?">Миний оноо?</button>'
+    : '<button class="chip" type="button" data-q="Энэ сар хоолонд хэдийг зарцуулсан бэ?">Хоолны зарлага?</button>';
+}
+function choreList(k){
+  const c = S.chores.filter(x=>x.who===k).sort((a,b)=>a.done-b.done);
+  if(!c.length) return '<p class="vsub">Ажил алга.</p>';
+  return c.map(x=>`<label class="item${x.done?" done":""}"><input type="checkbox" data-chore="${x.id}" ${x.done?"checked":""}><span class="nm">${esc(x.title)}</span><span class="tag">+${x.pts}</span></label>`).join("");
+}
+function pointsCard(k){
+  const rw=S.rewards[k], p=S.points[k], left=Math.max(0,rw.pts-p);
+  return `<div class="card" style="background:var(--gold-soft)"><div class="pts"><span class="big">${p}</span><span>оноо</span></div>
+    <div class="meter" style="margin:10px 0 6px"><i style="width:${Math.min(100,p/rw.pts*100)}%"></i></div>
+    <div class="kv" style="margin:0"><span>${esc(rw.title)}</span><span>${left?left+" оноо дутуу":"Авах боломжтой!"}</span></div></div>`;
+}
+function kidChoresCard(){
+  const c = S.chores.filter(x=>x.who===S.me), dn = c.filter(x=>x.done).length;
+  return `<div class="sec"><div class="sec-h"><h3>Миний ажил · ${dn}/${c.length}</h3><button class="link" type="button" data-tab="chores">Бүгд</button></div>${pointsCard(S.me)}</div>`;
+}
+function openWho(){
+  sheet(`<h3>Хэн ашиглаж байна?</h3><p class="vsub">Гишүүн бүр өөрт хамаатай зүйлээ харна.</p>
+    <div class="who-list">${["dad","mom","girl","boy"].map(k=>`<button class="who" type="button" data-me="${k}" aria-pressed="${k===S.me}">${av(k)}<span><b>${MEMBERS[k].name}</b><small>${KIDS.includes(k)?MEMBERS[k].role+" · Оролцогч: хуанли, жагсаалт, гэрийн ажил":MEMBERS[k].role+" · Эцэг эх: бүх модуль, төсөв, төлбөр"}</small></span></button>`).join("")}</div>
+    <p class="vsub" style="font-size:12.5px;margin-top:12px">Анар (0–5 ой) хамааралтай гишүүн тул апп-д нэвтрэхгүй. Түүний эрүүл мэнд, хуваарийг эцэг эх нь хөтөлнө.</p>`);
+}
 function cardHTML(m){
   const c = m.card;
   if(c.state==="done") return `<div class="confirm">✓ ${c.items.length} зүйл жагсаалтад нэмэгдлээ</div>`;
@@ -408,6 +487,13 @@ const MEAL = [
 ];
 function tobi(q){
   const s = q.toLowerCase();
+  if(/ажил|оноо|урамшуулал/.test(s)){
+    const ks = isKid() ? [S.me] : KIDS;
+    return {t: ks.map(k=>{const left=S.chores.filter(x=>x.who===k&&!x.done);return `${MEMBERS[k].name}: ${S.points[k]} оноо (${S.rewards[k].title} хүртэл ${Math.max(0,S.rewards[k].pts-S.points[k])} дутуу). ${left.length?"Үлдсэн ажил: "+left.map(x=>x.title).join(", ")+".":"Өнөөдрийн ажил бүгд дууссан!"}`}).join("\n"), tool:"get_chores"};
+  }
+  if(isKid() && /зарцуул|төсөв|мөнгө|зарлага|гүйлгээ/.test(s)){
+    return {t:"Гэр бүлийн төсвийн мэдээлэл зөвхөн аав, ээжид харагдана. Харин гэрийн ажил, оноо, хуанлийн талаар асууж болно!", tool:null};
+  }
   if(/цэс|юу хийх|хоол хий/.test(s)){
     const items = MEAL.flatMap(m=>m.need);
     return {t:"3 өдрийн цэс:\n"+MEAL.map(m=>`• ${m.day}: ${m.dish}`).join("\n")+"\nДутуу орцыг жагсаалтад нэмэх үү?", tool:"qwen3.7-plus", card:{items,state:"ask"}};
@@ -474,8 +560,11 @@ function context(){
     members: Object.entries(MEMBERS).filter(([k])=>k!=="all").map(([k,m])=>({id:k,name:m.name,role:m.role})),
     events: S.events.filter(e=>e.date>=iso(TODAY)&&e.date<=until).map(e=>({date:e.date,time:e.time,title:e.title,who:MEMBERS[e.who].name})),
     shopping: S.shop.filter(i=>!i.done).map(i=>i.name+(i.qty?" "+i.qty:"")),
-    budget: {limit:S.budget, spent:spent(), by_category:Object.fromEntries(byCat())},
-    transactions: S.tx.slice(-20).map(t=>({date:t.date,name:t.name,category:t.cat,amount:t.amt})),
+    viewer: {name:me().name, role:me().role, child:isKid()},
+    chores: S.chores.filter(c=>!isKid()||c.who===S.me).map(c=>({who:MEMBERS[c.who].name,title:c.title,points:c.pts,done:c.done})),
+    points: Object.fromEntries((isKid()?[S.me]:KIDS).map(k=>[MEMBERS[k].name,{points:S.points[k],goal:S.rewards[k].pts,reward:S.rewards[k].title}])),
+    budget: isKid() ? null : {limit:S.budget, spent:spent(), by_category:Object.fromEntries(byCat())},
+    transactions: isKid() ? [] : S.tx.slice(-20).map(t=>({date:t.date,name:t.name,category:t.cat,amount:t.amt})),
     health: S.vaccines.map(v=>({member:"Анар (2 настай)",name:v.name,date:v.date,place:v.place}))
   };
 }
@@ -502,6 +591,7 @@ function drawQR(cv, seedStr){
 }
 function openPay(reason){
   if(isActive()){ openSub(); return; }
+  if(isKid()){ toast("Захиалгыг аав, ээж идэвхжүүлнэ"); return; }
   S.invoiceNo++; const inv = "TOBI-"+iso(TODAY).replace(/-/g,"")+"-"+String(1000+S.invoiceNo);
   const o = sheet(`<h3>Тоби · 30 хоног</h3><p class="vsub">${esc(reason||"Гэр бүлийн бүх модуль, Тоби AI сард 150 хүсэлт.")}</p>
     <div class="card" style="display:flex;justify-content:space-between;align-items:baseline"><span>Нийт төлөх</span><span class="big">999₮</span></div>
@@ -557,7 +647,7 @@ function openMeal(){
 }
 function addItems(names){
   names.forEach(n=>{ const m = n.match(/^(.*?)\s*(\d+\s*(?:кг|г|л|ш))?$/i);
-    S.shop.push({id:nid(),name:(m&&m[1])||n,qty:(m&&m[2])||"",cat:"Хүнс",done:false,by:"mom"}); });
+    S.shop.push({id:nid(),name:(m&&m[1])||n,qty:(m&&m[2])||"",cat:"Хүнс",done:false,by:S.me}); });
 }
 function openAddEvent(){
   const o = sheet(`<h3>Шинэ үйл явдал</h3>
@@ -580,8 +670,9 @@ function classify(text){
 
 /* ---------- events ---------- */
 document.addEventListener("click", e=>{
-  const t = e.target.closest("[data-tab],[data-act],[data-q],[data-day],[data-card]");
+  const t = e.target.closest("[data-tab],[data-act],[data-q],[data-day],[data-card],[data-me]");
   if(!t) return;
+  if(t.dataset.me){ S.me=t.dataset.me; S.tab="home"; closeSheet(); render(); $("#view").scrollTop=0; toast(me().name+" болж нэвтэрлээ"); return; }
   if(t.dataset.tab){ S.tab=t.dataset.tab; render(); $("#view").scrollTop = S.tab==="ai"?1e6:0; return; }
   if(t.dataset.day){ S.selDay=t.dataset.day; render(); return; }
   if(t.dataset.q){ ask(t.dataset.q); return; }
@@ -592,12 +683,16 @@ document.addEventListener("click", e=>{
   if(a==="pay") openPay(); else if(a==="close") closeSheet(); else if(a==="meal") openMeal(); else if(a==="addev") openAddEvent();
 });
 $("#subpill").addEventListener("click",()=> isActive()?openSub():openPay());
+$("#mebtn").addEventListener("click", openWho);
 $("#reset").addEventListener("click",()=>{ S = seed(); closeSheet(); render(); toast("Демо эхнээсээ эхэллээ"); });
 document.addEventListener("submit", e=>{
   const f = e.target; if(f.closest(".sheet")) return;
   e.preventDefault();
   if(f.id==="homeask"){ ask($("#homein").value); }
   else if(f.id==="chatform"){ ask($("#chatin").value); }
+  else if(f.id==="choreform"){ const v=$("#chorein").value.trim(); if(!v) return;
+    const who=$("#chorewho").value; S.chores.push({id:nid(),title:v,who,pts:parseInt($("#chorepts").value,10),done:false});
+    render(); toast(MEMBERS[who].name+"-д ажил нэмэгдлээ"); }
   else if(f.id==="shopform"){ const v=$("#shopin").value.trim(); if(v){ addItems([v]); render(); $("#shopin").focus(); } }
   else if(f.id==="txform"){
     const v=$("#txin").value.trim(); if(!v) return;
@@ -606,11 +701,15 @@ document.addEventListener("submit", e=>{
     if(!r.amt){ $("#txres").innerHTML='<p class="vsub">Дүнг олсонгүй. Жишээ: «Такси 12000».</p>'; return; }
     $("#txres").innerHTML = `<div class="card"><div class="tx" style="border:none;padding:0"><span>${esc(r.name)}</span><span class="amt">−${fmt(r.amt)}</span><small>Ангилал: <b>${r.cat}</b> · итгэл ${Math.round(r.conf*100)}%</small><small style="text-align:right">демо</small></div>
       <div style="display:flex;gap:8px;margin-top:10px"><button class="btn gold" style="flex:1" type="button" id="txsave">Хадгалах</button><button class="btn ghost" type="button" id="txno">Болих</button></div></div>`;
-    $("#txsave").onclick = ()=>{ S.tx.push({id:nid(),date:iso(new Date()),name:r.name,cat:r.cat,amt:r.amt,who:"mom"}); render(); toast("Гүйлгээ хадгалагдлаа"); };
+    $("#txsave").onclick = ()=>{ S.tx.push({id:nid(),date:iso(new Date()),name:r.name,cat:r.cat,amt:r.amt,who:S.me}); render(); toast("Гүйлгээ хадгалагдлаа"); };
     $("#txno").onclick = ()=>{ $("#txres").innerHTML=""; };
   }
 });
 document.addEventListener("change", e=>{
+  const cid = e.target.dataset && e.target.dataset.chore;
+  if(cid){ const c = S.chores.find(x=>x.id==cid); if(!c) return;
+    c.done = e.target.checked; S.points[c.who] += c.done ? c.pts : -c.pts;
+    render(); if(c.done) toast(`+${c.pts} оноо · ${MEMBERS[c.who].name}`); return; }
   const id = e.target.dataset && e.target.dataset.chk; if(!id) return;
   const it = S.shop.find(i=>i.id==id); if(it){ it.done=e.target.checked; render(); }
 });
