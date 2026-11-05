@@ -30,6 +30,8 @@ const TOOLS = [
   { type: "function", function: { name: "get_shopping_list", description: "Худалдан авалтын жагсаалтын авах ёстой зүйлс", parameters: { type: "object", properties: {} } } },
   { type: "function", function: { name: "get_health_schedule", description: "Бяцхан хүүхдийн вакцин, эмчийн үзлэгийн хуваарь", parameters: { type: "object", properties: {} } } },
   { type: "function", function: { name: "get_chores", description: "Хүүхдүүдийн гэрийн ажил, цуглуулсан оноо, урамшууллын зорилго", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "get_inventory", description: "Гэрийн эд хөрөнгийн бүртгэл - байгаа зүйлс, ангилал", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "search_items", description: "Эд хөрөнгөөс нэр эсвэл ангилалаар хайх", parameters: { type: "object", properties: { query: { type: "string", description: "Хайх үг (нэр эсвэл ангилал)" } }, required: ["query"] } } },
   { type: "function", function: { name: "add_shopping_items", description: "Худалдан авалтын жагсаалтад зүйл нэмэх санал (хэрэглэгч баталгаажуулна)", parameters: { type: "object", properties: { items: { type: "array", items: { type: "string" }, description: "Жишээ: ['Сүү 1л', 'Талх']" } }, required: ["items"] } } }
 ];
 
@@ -42,6 +44,12 @@ function runTool(name, args, ctx) {
     case "list_events": return { today: ctx.today, events: (ctx.events || []).filter(e => !args.date || e.date === args.date) };
     case "get_shopping_list": return { items: ctx.shopping };
     case "get_health_schedule": return { today: ctx.today, schedule: ctx.health };
+    case "get_inventory": return { assets: ctx.assets || [], categories: ctx.assetCats || [] };
+    case "search_items": {
+      const q = (args.query || "").toLowerCase();
+      const found = (ctx.assets || []).filter(a => a.name.toLowerCase().includes(q) || (a.category || "").toLowerCase().includes(q));
+      return { query: args.query, found: found, total: found.length };
+    }
     default: return { error: "unknown tool" };
   }
 }
@@ -63,7 +71,9 @@ function cleanContext(c) {
     shopping: arr(c.shopping, 50).map(s => clip(s, 60)),
     budget: !c.budget ? null : { limit: Number(c.budget && c.budget.limit) || 0, spent: Number(c.budget && c.budget.spent) || 0, by_category: Object.fromEntries(Object.entries((c.budget && c.budget.by_category) || {}).slice(0, 12).map(([k, v]) => [clip(k, 30), Number(v) || 0])) },
     transactions: arr(c.transactions, 20).map(t => ({ date: clip(t.date, 10), name: clip(t.name, 60), category: clip(t.category, 30), amount: Number(t.amount) || 0 })),
-    health: arr(c.health, 10).map(h => ({ member: clip(h.member, 40), name: clip(h.name, 80), date: clip(h.date, 10), place: clip(h.place, 60) }))
+    health: arr(c.health, 10).map(h => ({ member: clip(h.member, 40), name: clip(h.name, 80), date: clip(h.date, 10), place: clip(h.place, 60) })),
+    assets: arr(c.assets, 50).map(a => ({ name: clip(a.name, 60), category: clip(a.category, 30), qty: Number(a.qty) || 0, unit: clip(a.unit, 10), location: clip(a.location, 40), note: clip(a.note, 60) })),
+    assetCats: arr(c.assetCats, 20).map(c => ({ id: Number(c.id) || 0, name: clip(c.name, 30), icon: clip(c.icon, 4), count: Number(c.count) || 0 }))
   };
 }
 

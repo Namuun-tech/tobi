@@ -269,6 +269,7 @@ const ICON = {
   cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   cart:'<path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/>',
   wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
+  assets:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>',
   ai:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',
   send:'<path d="M5 12h14M13 6l6 6-6 6"/>',
   star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
@@ -332,6 +333,22 @@ function seed(){
       {name:"Шүдний анхны үзлэг",date:d(60),place:"Хүүхдийн шүдний эмнэлэг",done:false}
     ],
     chat:[{r:"b",t:"Сайн байна уу! Би Тоби. Гэр бүлийн хуанли, төсөв, худалдан авалтын жагсаалтыг харж чадна. Юу туслах вэ?"}],
+    assetCats:[
+      {id:1,name:"Хувцас",icon:"👕"},
+      {id:2,name:"Цахилгаан хэрэгсэл",icon:"🔌"},
+      {id:3,name:"Гэр ахуй",icon:"🏠"},
+      {id:4,name:"Тээвэр",icon:"🚗"},
+      {id:5,name:"Спорт",icon:"⚽"}
+    ],
+    assets:[
+      {id:1,name:"Цэнхэр цамц",catId:1,qty:2,unit:"ш",location:"Шүүгээ",note:"Хаврын цамц"},
+      {id:2,name:"Хар цув",catId:1,qty:1,unit:"ш",location:"Шүүгээ",note:"Өвлийн цув"},
+      {id:3,name:"Микродолгионы зуух",catId:2,qty:1,unit:"ш",location:"Гал тогоо",note:"Samsung 2024"},
+      {id:4,name:"Тоос сорогч",catId:2,qty:1,unit:"ш",location:"Хүүхдийн өрөө",note:"Dyson V15"},
+      {id:5,name:"Цайны иж бүрэн",catId:3,qty:1,unit:"иж",location:"Гал тогоо",note:"6 хүний"},
+      {id:6,name:"Уулын дугуй",catId:4,qty:2,unit:"ш",location:"Гараж",note:"Аавын, ээжийн"},
+      {id:7,name:"Сагсан бөмбөг",catId:5,qty:1,unit:"ш",location:"Зочны өрөө",note:"Тэмүүлэнгийн"}
+    ],
     nextId:100
   };
 }
@@ -348,7 +365,7 @@ const isKid = () => KIDS.includes(S.me);
 const me = () => MEMBERS[S.me];
 const tabs = () => isKid()
   ? [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["chores","Ажил","star"],["ai","Тоби","ai"]]
-  : [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["budget","Төсөв","wallet"],["ai","Тоби","ai"]];
+  : [["home","Нүүр","home"],["cal","Хуанли","cal"],["shop","Дэлгүүр","cart"],["budget","Төсөв","wallet"],["assets","Эд хөрөнгө","assets"],["ai","Тоби","ai"]];
 function renderNav(){
   $("#nav").innerHTML = tabs().map(([k,l,i]) => `<button type="button" data-tab="${k}" ${S.tab===k?'aria-current="page"':""}>${svg(i)}${l}</button>`).join("");
 }
@@ -464,6 +481,15 @@ const VIEWS = {
     return `<h2 class="vt">Тоби</h2><p class="vsub">AI хүсэлт: ${S.aiUsed}/${S.quota} энэ сард</p>
     <div class="chat" id="chat">${S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.t)}${m.meta?`<span class="meta">${esc(m.meta)}</span>`:""}${m.card?cardHTML(m):""}</div>`).join("")}</div>
     <div class="chips">${firstChip()}<button class="chip" type="button" data-q="Маргааш юу байгаа вэ?">Маргааш?</button><button class="chip" type="button" data-q="Анарын вакцин хэзээ вэ?">Вакцин хэзээ?</button><button class="chip" type="button" data-q="Жагсаалтад банш, сүү нэм">Банш, сүү нэм</button></div>`;
+  },
+  assets(){
+    const cats = S.assetCats || [];
+    const items = S.assets || [];
+    return `<h2 class="vt">Эд хөрөнгө</h2><p class="vsub">Гэрийн зүйлсийн бүртгэл</p>
+    <div class="sec"><div class="sec-h"><h3>Ангилал (${cats.length})</h3><button class="link" type="button" data-act="addcat">+ Ангилал</button></div>
+      <div class="card" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">${cats.map(c=>{const cnt=items.filter(i=>i.catId===c.id).length;return `<div style="background:var(--surface);border-radius:12px;padding:12px;text-align:center"><div style="font-size:24px">${c.icon}</div><div style="font-weight:600;font-size:13px;margin-top:4px">${esc(c.name)}</div><div style="font-size:11px;color:var(--muted)">${cnt} зүйл</div></div>`}).join("")}</div></div>
+    <div class="sec"><div class="sec-h"><h3>Зүйлс (${items.length})</h3><button class="link" type="button" data-act="addasset">+ Зүйл</button></div>
+      <div class="card">${items.length?items.map(i=>{const cat=cats.find(c=>c.id===i.catId);return `<div class="item"><span class="nm"><b>${esc(i.name)}</b><br><small style="color:var(--muted)">${cat?cat.icon+' '+esc(cat.name):'—'} · ${i.qty} ${esc(i.unit)}${i.location?' · 📍'+esc(i.location):''}${i.note?' · 📝'+esc(i.note):''}</small></span></div>`}).join(""):'<p class="vsub">Бүртгэл хоосон</p>'}</div></div>`;
   }
 };
 function firstChip(){
@@ -526,6 +552,18 @@ function tobi(q){
     const v = S.vaccines.find(x=>!x.done);
     return {t:`Анарын дараагийн нь: ${v.name}. ${dayLabel(v.date)}, ${v.place}. Хуанлид 10:00 цагт сануулга тавьсан. Эмчийнхээ зааврыг баримтална уу.`, tool:"list_events"};
   }
+  if(/эд хөрөнгө|зүйл|байгаа|цамц|хувцас|дугуй|тоос сорогч|зуух|цай/.test(s)){
+    const items = S.assets || [];
+    const cats = S.assetCats || [];
+    const q = s.replace(/байгаа|байхгүй|эд хөрөнгө|зүйл/gi,"").trim();
+    const found = q ? items.filter(i=>i.name.toLowerCase().includes(q)) : items;
+    if(found.length){
+      const byCat = {};
+      found.forEach(i=>{const c=cats.find(c=>c.id===i.catId);const cn=c?c.name:'Бусад';if(!byCat[cn])byCat[cn]=[];byCat[cn].push(`${i.name} (${i.qty} ${i.unit})${i.location?' · '+i.location:''}`);});
+      return {t:"Байгаа зүйлс:\n"+Object.entries(byCat).map(([c,ns])=>`• ${c}: ${ns.join(", ")}`).join("\n"), tool:"get_inventory"};
+    }
+    return {t:"Танд ийм зүйл байхгүй байна. Худалдан авалтын жагсаалтад нэмэх үү?", tool:"get_inventory"};
+  }
   if(/маргааш|өнөөдөр|хуанли|юу байгаа|төлөвлөгөө/.test(s)){
     const tgt = /маргааш/.test(s)?iso(addDays(TODAY,1)):iso(TODAY);
     const ev = S.events.filter(e=>e.date===tgt).sort((a,b)=>a.time.localeCompare(b.time));
@@ -584,7 +622,9 @@ function context(){
     points: Object.fromEntries((isKid()?[S.me]:KIDS).map(k=>[MEMBERS[k].name,{points:S.points[k],goal:S.rewards[k].pts,reward:S.rewards[k].title}])),
     budget: isKid() ? null : {limit:S.budget, spent:spent(), by_category:Object.fromEntries(byCat())},
     transactions: isKid() ? [] : S.tx.slice(-20).map(t=>({date:t.date,name:t.name,category:t.cat,amount:t.amt})),
-    health: S.vaccines.map(v=>({member:"Анар (2 настай)",name:v.name,date:v.date,place:v.place}))
+    health: S.vaccines.map(v=>({member:"Анар (2 настай)",name:v.name,date:v.date,place:v.place})),
+    assets: (S.assets||[]).map(a=>{const c=(S.assetCats||[]).find(x=>x.id===a.catId);return {name:a.name,category:c?c.name:'Бусад',qty:a.qty,unit:a.unit,location:a.location,note:a.note}}),
+    assetCats: (S.assetCats||[]).map(c=>({id:c.id,name:c.name,icon:c.icon,count:(S.assets||[]).filter(a=>a.catId===c.id).length}))
   };
 }
 async function callQwen(q){
